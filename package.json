@@ -15,7 +15,7 @@
   },
   "scripts": {
     "lint": "jshint src test",
-    "test": "karma start"
+    "test": "karma start --single-run"
   },
   "dependencies": {
     "jquery": "^2.1.4",
