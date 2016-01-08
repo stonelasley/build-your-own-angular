@@ -65,6 +65,6 @@ Scope.prototype.$$areEqual = function(newValue, oldValue, valueEq) {
   } else {
     return newValue === oldValue;
   }
-}
+};
 
 module.exports = Scope;
