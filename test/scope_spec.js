@@ -242,5 +242,25 @@ describe('Scope', function () {
 
     });
 
+    it('executes $eval\'d function and returns result', function () {
+      scope.aValue = 42;
+
+      var result = scope.$eval(function(){
+        return scope.aValue;
+      });
+
+      expect(result).toBe(42);
+    });
+
+    it('passes the second $eval argument straight through', function () {
+      scope.aValue = 42;
+
+      var result = scope.$eval(function(scope, arg){
+        return scope.aValue + arg;
+      }, 2);
+
+      expect(result).toBe(44);
+    });
+
   });
 });
