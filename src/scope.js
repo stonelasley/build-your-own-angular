@@ -8,6 +8,8 @@ function Scope() {
   this.$$watchers = [];
   this.$$lastDirtyWatch = null;
   this.$$asyncQueue = [];
+  this.$$applyAsyncQueue = [];
+  this.$$applyAsyncId = null;
   this.$$phase = null;
 }
 
@@ -84,10 +86,6 @@ Scope.prototype.$$areEqual = function(newValue, oldValue, valueEq) {
   }
 };
 
-Scope.prototype.$eval = function (expr, locals){
-  return expr(this, locals);
-};
-
 Scope.prototype.$apply = function (expr){
   try {
     this.$beginPhase('$apply');
@@ -96,6 +94,28 @@ Scope.prototype.$apply = function (expr){
     this.$clearPhase();
     this.$digest();
   }
+};
+
+Scope.prototype.$applyAsync = function(expr) {
+  var self = this;
+
+  self.$$applyAsyncQueue.push(function () {
+    self.$eval(expr);
+  });
+  if(self.$$applyAsyncId === null) {
+    self.$$applyAsyncId = setTimeout(function () {
+      self.$apply(function () {
+        while (self.$$applyAsyncQueue.length) {
+          self.$$applyAsyncQueue.shift()();
+        }
+        self.$$applyAsyncId = null;
+      });
+    }, 0);
+}
+};
+
+Scope.prototype.$eval = function (expr, locals){
+  return expr(this, locals);
 };
 
 Scope.prototype.$evalAsync = function(expr){

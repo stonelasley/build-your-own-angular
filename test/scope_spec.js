@@ -426,7 +426,7 @@ describe('Scope', function () {
       expect(scope.phaseInApplyFunction).toBe('$apply');
     });
 
-    it('schedules a digest in $evalAsync', function () {
+    it('schedules a digest in $evalAsync', function (done) {
 
       scope.aValue = 'abc';
       scope.counter = 0;
@@ -451,5 +451,78 @@ describe('Scope', function () {
 
     });
 
+    it('allows async $apply with $applyAsync', function (done) {
+
+      scope.counter = 0;
+
+      scope.$watch(
+        function(scope){
+          return scope.aValue;
+        },
+        function(newValue, oldValue, scope){
+          scope.counter++;
+        }
+      );
+
+      scope.$digest();
+      expect(scope.counter).toBe(1);
+
+      scope.$applyAsync(function(){
+        scope.aValue = 'abc';
+      });
+
+      setTimeout(function(){
+        expect(scope.counter).toBe(2);
+        done();
+      }, 50);
+
+    });
+
+    it('never executes $applyAsync\'ed function in the same cycle', function (done) {
+      scope.aValue = [1, 2, 3];
+      scope.asyncApplied = false;
+
+      scope.$watch(
+        function(scope){},
+        function(newValue, oldValue, scope){
+          scope.$applyAsync(function(scope){
+            scope.asyncApplied = true;
+          });
+        }
+      );
+
+      scope.$digest();
+      expect(scope.asyncApplied).toBe(false);
+
+      setTimeout(function(){
+        expect(scope.asyncApplied).toBe(true);
+        done();
+      }, 50);
+    });
+
+    it('coalesces many call to $applyAsync', function (done) {
+      scope.counter = 0;
+
+      scope.$watch(
+        function(scope){
+          scope.counter++;
+          return scope.aValue;
+        },
+        function(newValue, oldValue, scope){}
+      );
+
+      scope.$applyAsync(function(scope){
+        scope.aValue = 'abc';
+      });
+      scope.$applyAsync(function(scope){
+        scope.aValue = 'def';
+      });
+
+      setTimeout(function() {
+        expect(scope.counter).toBe(2);
+        done();
+      }, 50);
+
+    });
   });
 });
