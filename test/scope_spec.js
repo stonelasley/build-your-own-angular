@@ -283,5 +283,27 @@ describe('Scope', function () {
 
     });
 
+    it('executes $evalAsync\'d function later but in the same digest cycle', function () {
+      scope.aValue = [1, 2, 3];
+      scope.asyncEvaluated = false;
+      scope.asyncEvaluatedImmediately = false;
+
+      scope.$watch(
+        function(scope){
+          return scope.aValue;
+        },
+        function(oldValue, newValue, scope){
+          scope.$evalAsync(function(){
+            scope.asyncEvaluated = true;
+          });
+          scope.asyncEvaluatedImmediately = scope.asyncEvaluated;
+        }
+      );
+
+      scope.$digest();
+      expect(scope.asyncEvaluated).toBe(true);
+      expect(scope.asyncEvaluatedImmediately).toBe(false);
+    });
+
   });
 });
