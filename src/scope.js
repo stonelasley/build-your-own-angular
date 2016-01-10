@@ -67,7 +67,7 @@ Scope.prototype.$digest = function () {
       try {
         var asyncTask = this.$$asyncQueue.shift();
         asyncTask.scope.$eval(asyncTask.expression);
-      } catch(e) {
+      } catch (e) {
         console.error(e);
       }
     }
@@ -122,9 +122,9 @@ Scope.prototype.$watch = function (watchFn, listenerFn, valueEq) {
   self.$$watchers.unshift(watcher);
   this.$$lastDirtyWatch = null;
 
-  return function() {
+  return function () {
     var index = self.$$watchers.indexOf(watcher);
-    if(index >= 0) {
+    if (index >= 0) {
       self.$$watchers.splice(index, 1);
       self.$$lastDirtyWatch = null;
     }
@@ -149,6 +149,7 @@ Scope.prototype.$$digestOnce = function () {
 
   _.forEachRight(this.$$watchers, function (watcher) {
     try {
+      if (watcher) {
       newValue = watcher.watchFn(self);
       oldValue = watcher.last;
 
@@ -159,15 +160,23 @@ Scope.prototype.$$digestOnce = function () {
           (oldValue === initWatchVal ? newValue : oldValue),
           self);
         dirty = true;
-      } else if (self.$$lastDirtyWatch === watcher) {
+      }
+      else if (self.$$lastDirtyWatch === watcher) {
         return false;
       }
-    } catch (e) {
-      console.error(e);
     }
-  });
-  return dirty;
-};
+  }
+  catch
+  (e)
+  {
+    console.error(e);
+  }
+}
+)
+;
+return dirty;
+}
+;
 
 Scope.prototype.$$flushApplyAsync = function () {
   while (this.$$applyAsyncQueue.length) {
