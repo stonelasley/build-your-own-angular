@@ -109,6 +109,7 @@ Scope.prototype.$evalAsync = function (expr) {
 };
 
 Scope.prototype.$watch = function (watchFn, listenerFn, valueEq) {
+  var self = this;
 
   var watcher = {
     watchFn: watchFn,
@@ -118,8 +119,15 @@ Scope.prototype.$watch = function (watchFn, listenerFn, valueEq) {
     last: initWatchVal
   };
 
-  this.$$watchers.push(watcher);
+  self.$$watchers.unshift(watcher);
   this.$$lastDirtyWatch = null;
+
+  return function() {
+    var index = self.$$watchers.indexOf(watcher);
+    if(index >= 0) {
+      self.$$watchers.splice(index, 1);
+    }
+  };
 };
 
 Scope.prototype.$$areEqual = function (newValue, oldValue, valueEq) {
@@ -138,7 +146,7 @@ Scope.prototype.$$digestOnce = function () {
 
   var newValue, oldValue, dirty;
 
-  _.forEach(this.$$watchers, function (watcher) {
+  _.forEachRight(this.$$watchers, function (watcher) {
     try {
       newValue = watcher.watchFn(self);
       oldValue = watcher.last;
