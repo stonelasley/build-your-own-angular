@@ -175,8 +175,7 @@ Scope.prototype.$$digestOnce = function () {
 )
 ;
 return dirty;
-}
-;
+};
 
 Scope.prototype.$$flushApplyAsync = function () {
   while (this.$$applyAsyncQueue.length) {
