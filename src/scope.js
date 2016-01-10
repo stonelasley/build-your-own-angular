@@ -50,12 +50,16 @@ Scope.prototype.$$digestOnce = function() {
 };
 
 Scope.prototype.$digest = function(){
-  var self = this;
 
   var ttl = 10;
   var dirty;
   this.$$lastDirtyWatch = null;
   this.$beginPhase('$digest');
+
+  if(this.$$applyAsyncId){
+    clearTimeout(this.$$applyAsyncId);
+    this.$$flushApplyAsync();
+  }
 
   do {
 
@@ -103,13 +107,8 @@ Scope.prototype.$applyAsync = function(expr) {
     self.$eval(expr);
   });
   if(self.$$applyAsyncId === null) {
-    self.$$applyAsyncId = setTimeout(function () {
-      self.$apply(function () {
-        while (self.$$applyAsyncQueue.length) {
-          self.$$applyAsyncQueue.shift()();
-        }
-        self.$$applyAsyncId = null;
-      });
+    self.$$applyAsyncId = setTimeout(function() {
+      self.$apply(_.bind(self.$$flushApplyAsync, self));
     }, 0);
 }
 };
@@ -129,6 +128,13 @@ Scope.prototype.$evalAsync = function(expr){
     }, 0);
   }
   this.$$asyncQueue.push({scope: this, expression: expr});
+};
+
+Scope.prototype.$$flushApplyAsync = function(){
+  while(this.$$applyAsyncQueue.length){
+    this.$$applyAsyncQueue.shift()();
+  }
+  this.$$applyAsyncId = null;
 };
 
 Scope.prototype.$beginPhase = function(phase){
