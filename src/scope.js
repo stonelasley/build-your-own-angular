@@ -139,8 +139,15 @@ Scope.prototype.$watchGroup = function (watchFns, listenerFn) {
   var changeReactionScheduled = false;
   var firstRun = true;
 
+  if (watchFns.length === 0) {
+    self.$evalAsync(function () {
+      listenerFn(newValues, newValues, self);
+    });
+    return;
+  }
+
   function watchGroupListener() {
-    if(firstRun){
+    if (firstRun) {
       firstRun = false;
       listenerFn(newValues, newValues, self);
     } else {
@@ -150,17 +157,23 @@ Scope.prototype.$watchGroup = function (watchFns, listenerFn) {
     changeReactionScheduled = false;
   }
 
-  _.forEach(watchFns, function (watchFn, i){
-    self.$watch(watchFn, function(newValue, oldValue){
+  var destroyFunctions = _.map(watchFns, function (watchFn, i) {
+    return self.$watch(watchFn, function (newValue, oldValue) {
       newValues[i] = newValue;
       oldValues[i] = oldValue;
 
-      if(!changeReactionScheduled) {
+      if (!changeReactionScheduled) {
         changeReactionScheduled = true;
         self.$evalAsync(watchGroupListener);
       }
     });
   });
+
+  return function () {
+    _.forEach(destroyFunctions, function (destroyFunction) {
+      destroyFunction();
+    });
+  };
 };
 
 Scope.prototype.$$areEqual = function (newValue, oldValue, valueEq) {
@@ -180,33 +193,32 @@ Scope.prototype.$$digestOnce = function () {
   var newValue, oldValue, dirty;
 
   _.forEachRight(this.$$watchers, function (watcher) {
-    try {
-      if (watcher) {
-      newValue = watcher.watchFn(self);
-      oldValue = watcher.last;
+      try {
+        if (watcher) {
+          newValue = watcher.watchFn(self);
+          oldValue = watcher.last;
 
-      if (!self.$$areEqual(newValue, oldValue, watcher.valueEq)) {
-        self.$$lastDirtyWatch = watcher;
-        watcher.last = (watcher.valueEq ? _.cloneDeep(newValue) : newValue);
-        watcher.listenerFn(newValue,
-          (oldValue === initWatchVal ? newValue : oldValue),
-          self);
-        dirty = true;
+          if (!self.$$areEqual(newValue, oldValue, watcher.valueEq)) {
+            self.$$lastDirtyWatch = watcher;
+            watcher.last = (watcher.valueEq ? _.cloneDeep(newValue) : newValue);
+            watcher.listenerFn(newValue,
+              (oldValue === initWatchVal ? newValue : oldValue),
+              self);
+            dirty = true;
+          }
+          else if (self.$$lastDirtyWatch === watcher) {
+            return false;
+          }
+        }
       }
-      else if (self.$$lastDirtyWatch === watcher) {
-        return false;
+      catch
+        (e) {
+        console.error(e);
       }
     }
-  }
-  catch
-  (e)
-  {
-    console.error(e);
-  }
-}
-)
-;
-return dirty;
+  )
+  ;
+  return dirty;
 };
 
 Scope.prototype.$$flushApplyAsync = function () {

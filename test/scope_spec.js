@@ -683,19 +683,19 @@ describe('Scope', function () {
 
     it('catches exceptions in $applyAsync', function (done) {
 
-      scope.$applyAsync(function(scope){
+      scope.$applyAsync(function (scope) {
         throw 'Error';
       });
 
-      scope.$applyAsync(function(scope){
+      scope.$applyAsync(function (scope) {
         throw 'Error';
       });
 
-      scope.$applyAsync(function(scope){
+      scope.$applyAsync(function (scope) {
         scope.applied = true;
       });
 
-      setTimeout(function(){
+      setTimeout(function () {
         expect(scope.applied).toBe(true);
         done();
       }, 50);
@@ -705,11 +705,11 @@ describe('Scope', function () {
 
       var didRun = false;
 
-      scope.$$postDigest(function(){
+      scope.$$postDigest(function () {
         throw 'Error';
       });
 
-      scope.$$postDigest(function(){
+      scope.$$postDigest(function () {
         didRun = true;
       });
 
@@ -723,8 +723,10 @@ describe('Scope', function () {
       scope.counter = 0;
 
       var destroyWatch = scope.$watch(
-        function(scope) {return scope.aValue;},
-        function(newValue, oldValue, scope) {
+        function (scope) {
+          return scope.aValue;
+        },
+        function (newValue, oldValue, scope) {
           scope.counter++;
         }
       );
@@ -750,21 +752,21 @@ describe('Scope', function () {
       var watchCalls = [];
 
       scope.$watch(
-        function(scope) {
+        function (scope) {
           watchCalls.push('first');
           return scope.aValue;
         }
       );
 
       var destroyWatch = scope.$watch(
-        function(scope){
+        function (scope) {
           watchCalls.push('second');
           destroyWatch();
         }
       );
 
       scope.$watch(
-        function(scope) {
+        function (scope) {
           watchCalls.push('third');
           return scope.aValue;
         }
@@ -780,17 +782,19 @@ describe('Scope', function () {
       scope.counter = 0;
 
       scope.$watch(
-        function(scope){
+        function (scope) {
           return scope.aValue;
         },
-        function(newValue, oldValue, scope){
+        function (newValue, oldValue, scope) {
           destroyWatch();
         }
       );
 
       var destroyWatch = scope.$watch(
-        function(scope){},
-        function(newValue, oldValue, scope) {}
+        function (scope) {
+        },
+        function (newValue, oldValue, scope) {
+        }
       );
 
       scope.$watch(
@@ -833,7 +837,7 @@ describe('Scope', function () {
     });
   });
 
-  describe('watchGroup', function() {
+  describe('watchGroup', function () {
 
     var scope;
 
@@ -849,13 +853,17 @@ describe('Scope', function () {
       scope.anotherValue = 2;
 
       scope.$watchGroup([
-        function(scope) {return scope.aValue;},
-        function(scope) {return scope.anotherValue;}
-      ],
-      function(newValues, oldValues, scope) {
-        gotNewValues = newValues;
-        gotOldValues = oldValues;
-      });
+          function (scope) {
+            return scope.aValue;
+          },
+          function (scope) {
+            return scope.anotherValue;
+          }
+        ],
+        function (newValues, oldValues, scope) {
+          gotNewValues = newValues;
+          gotOldValues = oldValues;
+        });
 
       scope.$digest();
 
@@ -870,12 +878,16 @@ describe('Scope', function () {
       scope.anotherValue = 2;
 
       scope.$watchGroup([
-        function(scope){ return scope.aValue;},
-        function(scope) {return scope.anotherValue;}
-      ],
-      function(newValues, oldValues, scope){
-        counter++;
-      });
+          function (scope) {
+            return scope.aValue;
+          },
+          function (scope) {
+            return scope.anotherValue;
+          }
+        ],
+        function (newValues, oldValues, scope) {
+          counter++;
+        });
 
       scope.$digest();
 
@@ -890,10 +902,14 @@ describe('Scope', function () {
       scope.anotherValue = 2;
 
       scope.$watchGroup([
-          function(scope){ return scope.aValue; },
-          function(scope) {return scope.anotherValue;}
+          function (scope) {
+            return scope.aValue;
+          },
+          function (scope) {
+            return scope.anotherValue;
+          }
         ],
-        function(newValues, oldValues, scope) {
+        function (newValues, oldValues, scope) {
           gotNewValues = newValues;
           gotOldValues = oldValues;
         }
@@ -912,10 +928,14 @@ describe('Scope', function () {
       scope.anotherValue = 2;
 
       scope.$watchGroup([
-          function(scope){ return scope.aValue; },
-          function(scope) {return scope.anotherValue;}
+          function (scope) {
+            return scope.aValue;
+          },
+          function (scope) {
+            return scope.anotherValue;
+          }
         ],
-        function(newValues, oldValues, scope) {
+        function (newValues, oldValues, scope) {
           gotNewValues = newValues;
           gotOldValues = oldValues;
         }
@@ -928,6 +948,50 @@ describe('Scope', function () {
 
       expect(gotNewValues).toEqual([1, 3]);
       expect(gotOldValues).toEqual([1, 2]);
+    });
+
+    it('calls the listener once even if the watch array is empty', function () {
+
+      var gotNewValues, gotOldValues;
+
+      scope.$watchGroup([],
+        function (newValues, oldValues, scope) {
+          gotNewValues = newValues;
+          gotOldValues = oldValues;
+        });
+
+      scope.$digest();
+
+      expect(gotNewValues).toEqual([]);
+      expect(gotOldValues).toEqual([]);
+    });
+
+    it('can be deregistered', function () {
+
+      var counter = 0;
+
+      scope.aValue = 1;
+      scope.anotherValue = 2;
+
+      var destroyGroup = scope.$watchGroup([
+          function (scope) {
+            return scope.aValue;
+          },
+          function (scope) {
+            return scope.anotherValue;
+          }
+        ],
+        function (newValues, oldValues, scope) {
+          counter++;
+        });
+
+      scope.$digest();
+
+      scope.anotherValue = 3;
+      destroyGroup();
+      scope.$digest();
+
+      expect(counter).toEqual(1);
     });
   });
 });
