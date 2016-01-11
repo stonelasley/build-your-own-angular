@@ -237,6 +237,12 @@ Scope.prototype.$$flushApplyAsync = function () {
   this.$$applyAsyncId = null;
 };
 
+Scope.prototype.$new = function(){
+  var ChildScope = function() {};
+  ChildScope.prototype = this;
+  return new ChildScope();
+};
+
 Scope.prototype.$$postDigest = function (fn) {
   this.$$postDigestQueue.push(fn);
 };
