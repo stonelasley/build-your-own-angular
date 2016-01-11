@@ -8,3 +8,4 @@ http://teropa.info/build-your-own-angular
 
 0. Environment Setup
 1. Scopes and Digest
+2. Scope Inheritance
