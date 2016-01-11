@@ -1103,5 +1103,50 @@ describe('Scope', function () {
       expect(aa.anotherValue).toBeUndefined();
       expect(aaa.anotherValue).toBeUndefined();
     });
+
+    it('shadows a parent\'s property with the same name', function () {
+
+      var parent = new Scope();
+      var child = parent.$new();
+
+      parent.name = 'Jack';
+      child.name = 'Jill';
+
+      expect(child.name).toBe('Jill');
+      expect(parent.name).toBe('Jack');
+
+    });
+
+    it('does not shadow members of parent scope\'s attributes', function () {
+
+      var parent = new Scope();
+      var child = parent.$new();
+
+      parent.user = {name: 'Jack'};
+      child.user.name = 'Jill';
+
+      expect(child.user.name).toBe('Jill');
+      expect(parent.user.name).toBe('Jill');
+    });
+
+    it('does not digest it\'s parent(s)', function () {
+
+      var parent = new Scope();
+      var child = parent.$new();
+
+      parent.aValue = 'abc';
+      parent.$watch(
+        function (scope) {
+          return scope.aValue;
+        },
+        function (newValue, oldValue, scope) {
+          scope.aValueWas = newValue;
+        }
+      );
+
+      child.$digest();
+      expect(child.aValueWas).toBeUndefined();
+
+    });
   })
 });

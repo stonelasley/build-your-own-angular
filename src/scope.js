@@ -227,6 +227,7 @@ Scope.prototype.$$digestOnce = function () {
 };
 
 Scope.prototype.$$flushApplyAsync = function () {
+
   while (this.$$applyAsyncQueue.length) {
     try {
       this.$$applyAsyncQueue.shift()();
@@ -234,13 +235,19 @@ Scope.prototype.$$flushApplyAsync = function () {
       console.error(e);
     }
   }
+
   this.$$applyAsyncId = null;
+
 };
 
 Scope.prototype.$new = function(){
+
   var ChildScope = function() {};
   ChildScope.prototype = this;
-  return new ChildScope();
+  var child = new ChildScope();
+  child.$$watchers = [];
+
+  return child;
 };
 
 Scope.prototype.$$postDigest = function (fn) {
