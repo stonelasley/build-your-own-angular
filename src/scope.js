@@ -6,6 +6,7 @@ function initWatchVal() {
 }
 
 function Scope() {
+  this.$root = this;
   this.$$applyAsyncId = null;
   this.$$applyAsyncQueue = [];
   this.$$asyncQueue = [];
@@ -22,7 +23,7 @@ Scope.prototype.$apply = function (expr) {
     return this.$eval(expr);
   } finally {
     this.$clearPhase();
-    this.$digest();
+    this.$root.$digest();
   }
 };
 
