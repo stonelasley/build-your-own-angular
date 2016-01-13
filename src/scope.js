@@ -115,13 +115,13 @@ Scope.prototype.$new = function (isolated) {
   var child;
   if(isolated){
     child = new Scope();
+    child.$root = this.$root;
   } else {
     var ChildScope = function () {
     };
     ChildScope.prototype = this;
     child = new ChildScope();
   }
-
   child.$$watchers = [];
   child.$$children = [];
   this.$$children.push(child);
