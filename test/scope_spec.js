@@ -1347,11 +1347,11 @@ describe('Scope', function () {
       var parent = new Scope();
       var child = parent.$new(true);
 
-      child.$evalAsync(function(scope){
+      child.$evalAsync(function (scope) {
         scope.didEvalAsync = true;
       });
 
-      setTimeout(function(){
+      setTimeout(function () {
         expect(child.didEvalAsync).toBe(true);
         done();
       }, 50);
@@ -1363,13 +1363,35 @@ describe('Scope', function () {
       var parent = new Scope();
       var child = parent.$new(true);
 
-      child.$$postDigest(function(){
+      child.$$postDigest(function () {
         child.didPostDigest = true;
       });
 
       parent.$digest();
 
       expect(child.didPostDigest).toBe(true);
+    });
+
+    it('can take some other scope as the parent', function () {
+
+      var prototypeParent = new Scope();
+      var hierarchyParent = new Scope();
+      var child = prototypeParent.$new(false, hierarchyParent);
+
+      prototypeParent.a = 42;
+      expect(child.a).toBe(42);
+
+      child.counter = 0;
+      child.$watch(function (scope) {
+        scope.counter++;
+      });
+
+      prototypeParent.$digest();
+      expect(child.counter).toBe(0);
+
+      hierarchyParent.$digest();
+      expect(child.counter).toBe(2);
+
     });
 
   });
