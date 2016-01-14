@@ -1309,7 +1309,8 @@ describe('Scope', function () {
         }
       );
 
-      child2.$apply(function(scope){});
+      child2.$apply(function (scope) {
+      });
 
       expect(parent.counter).toBe(1);
     });
@@ -1322,23 +1323,24 @@ describe('Scope', function () {
 
       parent.aValue = 'abc';
       parent.counter = 0;
-        
+
       parent.$watch(
-        function(scope){
+        function (scope) {
           return scope.aValue;
         },
-        function(newValue, oldValue, scope) {
+        function (newValue, oldValue, scope) {
           scope.counter++;
         }
       );
-        
-      child2.$evalAsync(function(scope){});
-      
-      setTimeout(function(scope) {
+
+      child2.$evalAsync(function (scope) {
+      });
+
+      setTimeout(function (scope) {
         expect(parent.counter).toBe(1);
         done();
       }, 50);
     });
-      
+
   });
 });
