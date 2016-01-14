@@ -51,6 +51,17 @@ Scope.prototype.$clearPhase = function () {
   this.$$phase = null;
 };
 
+Scope.prototype.$destroy = function () {
+  if (this.$parent) {
+    var siblings = this.$parent.$$children;
+    var indexOfThis = siblings.indexOf(this);
+    if (indexOfThis >= 0) {
+      siblings.splice(indexOfThis, 1);
+    }
+  }
+  this.$$watchers = null;
+};
+
 Scope.prototype.$digest = function () {
 
   var ttl = 10;
@@ -128,6 +139,7 @@ Scope.prototype.$new = function (isolated, parent) {
   }
   child.$$watchers = [];
   child.$$children = [];
+  child.$parent = parent;
   parent.$$children.push(child);
 
   return child;
