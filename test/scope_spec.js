@@ -1427,4 +1427,138 @@ describe('Scope', function () {
     });
 
   });
+
+  describe('watchCollection', function () {
+
+    var scope;
+
+    beforeEach(function () {
+      scope = new Scope();
+    });
+
+    it('works like a normal watch for non-collections', function () {
+
+      var valueProvided;
+
+      scope.aValue = 42;
+      scope.counter = 0;
+
+      scope.$watchCollection(
+        function(scope) {return scope.aValue;},
+        function(newValue, oldValue, scope) {
+          valueProvided = newValue;
+          scope.counter++;
+        }
+      );
+
+      scope.$digest();
+      expect(scope.counter).toBe(1);
+      expect(valueProvided).toBe(scope.aValue);
+
+      scope.aValue = 43;
+      scope.$digest();
+      expect(scope.counter).toBe(2);
+
+      scope.$digest();
+      expect(scope.counter).toBe(2);
+    });
+
+    it('works like a normal watch for NaNs', function () {
+
+      scope.aValue = 0/0;
+      scope.counter = 0;
+
+      scope.$watchCollection(
+        function (scope) {
+          return scope.aValue;
+        },
+        function (newValue, oldValue, scope) {
+          scope.counter++;
+        }
+      );
+
+      scope.$digest();
+      expect(scope.counter).toBe(1);
+
+      scope.$digest();
+      expect(scope.counter).toBe(1);
+
+    });
+
+    it('notices when the value becomes an array', function () {
+
+      scope.counter = 0;
+
+      scope.$watchCollection(
+        function(scope) {
+          return scope.arr;
+        },
+        function(newValue, oldValue, scope) {
+          scope.counter++;
+        }
+      );
+
+      scope.$digest();
+      expect(scope.counter).toBe(1);
+
+      scope.arr = [1, 2, 3];
+      scope.$digest();
+      expect(scope.counter).toBe(2);
+
+      scope.$digest();
+      expect(scope.counter).toBe(2);
+    });
+
+    it('notices an item added to an array', function () {
+
+      scope.arr = [1, 2, 3];
+      scope.counter = 0;
+
+      scope.$watchCollection(
+        function (scope) {
+          return scope.arr;
+        },
+        function (newValue, oldValue, scope) {
+          scope.counter++;
+        }
+      );
+
+      scope.$digest();
+      expect(scope.counter).toBe(1);
+
+      scope.arr.push(4);
+      scope.$digest();
+      expect(scope.counter).toBe(2);
+
+      scope.$digest();
+      expect(scope.counter).toBe(2);
+
+    });
+
+    it('notices an item removed from an array', function () {
+
+      scope.arr = [1, 2, 3];
+      scope.counter = 0;
+
+      scope.$watchCollection(
+        function (scope) {
+          return scope.arr;
+        },
+        function (newValue, oldValue, scope) {
+          scope.counter++;
+        }
+      );
+
+      scope.$digest();
+      expect(scope.counter).toBe(1);
+
+      scope.arr.shift();
+      scope.$digest();
+      expect(scope.counter).toBe(2);
+
+      scope.$digest();
+      expect(scope.counter).toBe(2);
+
+    });
+  });
 });
