@@ -183,12 +183,12 @@ Scope.prototype.$watchCollection = function (watchFn, listenerFn) {
 
       if (_.isArray(newValue)) {
 
-        if(!_.isArray(oldValue)) {
+        if (!_.isArray(oldValue)) {
 
           changeCount++;
           oldValue = [];
         }
-        if(newValue.length !== oldValue.length) {
+        if (newValue.length !== oldValue.length) {
           changeCount++;
           oldValue.length = newValue.length;
         }

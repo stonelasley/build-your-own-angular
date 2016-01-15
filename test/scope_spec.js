@@ -1444,8 +1444,10 @@ describe('Scope', function () {
       scope.counter = 0;
 
       scope.$watchCollection(
-        function(scope) {return scope.aValue;},
-        function(newValue, oldValue, scope) {
+        function (scope) {
+          return scope.aValue;
+        },
+        function (newValue, oldValue, scope) {
           valueProvided = newValue;
           scope.counter++;
         }
@@ -1465,7 +1467,7 @@ describe('Scope', function () {
 
     it('works like a normal watch for NaNs', function () {
 
-      scope.aValue = 0/0;
+      scope.aValue = 0 / 0;
       scope.counter = 0;
 
       scope.$watchCollection(
@@ -1490,10 +1492,10 @@ describe('Scope', function () {
       scope.counter = 0;
 
       scope.$watchCollection(
-        function(scope) {
+        function (scope) {
           return scope.arr;
         },
-        function(newValue, oldValue, scope) {
+        function (newValue, oldValue, scope) {
           scope.counter++;
         }
       );
