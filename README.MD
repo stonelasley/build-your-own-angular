@@ -10,3 +10,4 @@ http://teropa.info/build-your-own-angular
 1. Scopes and Digest
 2. Scope Inheritance
 3. Watching Collections
+4. Scope Events
