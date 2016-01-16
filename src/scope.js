@@ -13,6 +13,7 @@ function Scope() {
   this.$$children = [];
   this.$$phase = null;
   this.$$lastDirtyWatch = null;
+  this.$$listeners = {};
   this.$$postDigestQueue = [];
   this.$$watchers = [];
 }
@@ -143,6 +144,16 @@ Scope.prototype.$new = function (isolated, parent) {
   parent.$$children.push(child);
 
   return child;
+};
+
+Scope.prototype.$on = function (eventName, listener) {
+
+  var listeners = this.$$listeners[eventName]
+
+  if (!listeners) {
+    this.$$listeners[eventName] = listeners = [];
+  }
+  listeners.push(listener);
 };
 
 Scope.prototype.$watch = function (watchFn, listenerFn, valueEq) {
