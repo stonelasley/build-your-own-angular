@@ -1766,5 +1766,24 @@ describe('Scope', function () {
       expect(scope.counter).toBe(2);
 
     });
+
+    it('does not fail on NaN attributes in objects', function () {
+
+      scope.counter = 0;
+      scope.obj = {a: NaN};
+
+      scope.$watchCollection(
+        function (scope) {
+          return scope.obj;
+        },
+        function (newValue, oldValue, scope) {
+          scope.counter++;
+        }
+      );
+
+      scope.$digest();
+      expect(scope.counter).toBe(1);
+
+    });
   });
 });
