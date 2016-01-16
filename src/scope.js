@@ -387,7 +387,7 @@ function isArrayLike(obj) {
     return false;
   }
   var length = obj.length;
-  return _.isNumber(length);
+  return (_.isNumber(length) && length > 0 && (length - 1) in obj);
 }
 
 module.exports = Scope;
