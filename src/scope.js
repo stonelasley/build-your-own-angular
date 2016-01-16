@@ -203,10 +203,16 @@ Scope.prototype.$watchCollection = function (watchFn, listenerFn) {
         });
       } else {
 
-        if(!_.isObject(oldValue) || isArrayLike(oldValue)) {
+        if (!_.isObject(oldValue) || isArrayLike(oldValue)) {
           changeCount++;
           oldValue = {};
         }
+        _.forOwn(newValue, function (newVal, key) {
+          if(oldValue[key] !== newVal){
+            changeCount++;
+            oldValue[key] = newVal;
+          }
+        });
       }
     } else {
 
