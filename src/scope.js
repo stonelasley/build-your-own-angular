@@ -181,7 +181,7 @@ Scope.prototype.$watchCollection = function (watchFn, listenerFn) {
 
     if (_.isObject(newValue)) {
 
-      if (_.isArray(newValue)) {
+      if (isArrayLike(newValue)) {
 
         if (!_.isArray(oldValue)) {
 
@@ -348,5 +348,13 @@ Scope.prototype.$$flushApplyAsync = function () {
 Scope.prototype.$$postDigest = function (fn) {
   this.$$postDigestQueue.push(fn);
 };
+
+function isArrayLike(obj) {
+  if (_.isNull(obj) || _.isUndefined(obj)) {
+    return false;
+  }
+  var length = obj.length;
+  return _.isNumber(length);
+}
 
 module.exports = Scope;
