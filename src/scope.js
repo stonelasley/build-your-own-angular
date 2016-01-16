@@ -148,7 +148,7 @@ Scope.prototype.$new = function (isolated, parent) {
 
 Scope.prototype.$on = function (eventName, listener) {
 
-  var listeners = this.$$listeners[eventName]
+  var listeners = this.$$listeners[eventName];
 
   if (!listeners) {
     this.$$listeners[eventName] = listeners = [];
@@ -275,7 +275,7 @@ Scope.prototype.$watchCollection = function (watchFn, listenerFn) {
     }
   };
 
-  return this.$watch(internalWatchFn, internalListenerFn)
+  return this.$watch(internalWatchFn, internalListenerFn);
 };
 
 Scope.prototype.$watchGroup = function (watchFns, listenerFn) {
