@@ -3,7 +3,7 @@ module.exports = function(config) {
   config.set({
     frameworks: ['browserify', 'jasmine'],
     files: [
-      'src/**/*.js',
+      {pattern: 'src/**/*.js', watched: false, included: true, served: true},
       'test/**/*_spec.js'
     ],
     preprocessors: {
