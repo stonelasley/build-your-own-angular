@@ -2075,6 +2075,18 @@ describe('Scope', function () {
         expect(nextListener).toHaveBeenCalled();
 
       });
+
+      it('sets defaultPrevented when preventDefault is called on ' + method, function () {
+
+        var listener = function (event) {
+          event.preventDefault();
+        };
+        scope.$on('someEvent', listener);
+
+        var event = scope[method]('someEvent');
+
+        expect(event.defaultPrevented).toBe(true);
+      });
     });
 
     it('propagates up the scope hierarchy on $emit', function () {
