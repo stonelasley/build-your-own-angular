@@ -2004,7 +2004,7 @@ describe('Scope', function () {
 
         expect(listener).toHaveBeenCalled();
         expect(listener.calls.mostRecent().args[0].name).toEqual('someEvent');
-      })
+      });
 
       it('passes the same event object to each listener on ' + method, function () {
 
@@ -2055,6 +2055,25 @@ describe('Scope', function () {
         scope[method]('someEvent');
 
         expect(listener).not.toHaveBeenCalled();
+      });
+
+      it('does not skip the next listener when removed on ' + method, function () {
+
+        var deregister;
+
+        var listener = function () {
+          deregister();
+        };
+
+        var nextListener = jasmine.createSpy();
+
+        deregister = scope.$on('someEvent', listener);
+        scope.$on('someEvent', nextListener);
+
+        scope[method]('someEvent');
+
+        expect(nextListener).toHaveBeenCalled();
+
       });
     });
 
