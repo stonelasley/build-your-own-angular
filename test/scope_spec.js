@@ -1978,34 +1978,23 @@ describe('Scope', function () {
 
     });
 
-    it('calls the listeners of the matching event on $emit', function () {
+    _.forEach(['$emit', '$broadcast'], function(method){
 
-      var listener1 = jasmine.createSpy();
-      var listener2 = jasmine.createSpy();
+      it('calls the listeners of the matching event on ' + method, function () {
 
-      scope.$on('someEvent', listener1);
-      scope.$on('someOtherEvent', listener2);
+        var listener1 = jasmine.createSpy();
+        var listener2 = jasmine.createSpy();
 
-      scope.$emit('someEvent');
+        scope.$on('someEvent', listener1);
+        scope.$on('someOtherEvent', listener2);
 
-      expect(listener1).toHaveBeenCalled();
-      expect(listener2).not.toHaveBeenCalled();
+        scope[method]('someEvent');
 
+        expect(listener1).toHaveBeenCalled();
+        expect(listener2).not.toHaveBeenCalled();
+
+      });
     });
 
-    it('calls the listeners of the matching event on $broadcast', function () {
-
-      var listener1 = jasmine.createSpy();
-      var listener2 = jasmine.createSpy();
-
-      scope.$on('someEvent', listener1);
-      scope.$on('someOtherEvent', listener2);
-
-      scope.$broadcast('someEvent');
-
-      expect(listener1).toHaveBeenCalled();
-      expect(listener2).not.toHaveBeenCalled();
-
-    });
   });
 });
