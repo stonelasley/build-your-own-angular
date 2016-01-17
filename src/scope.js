@@ -74,6 +74,8 @@ Scope.prototype.$clearPhase = function () {
 };
 
 Scope.prototype.$destroy = function () {
+
+  this.$broadcast('$destroy');
   if (this.$parent) {
     var siblings = this.$parent.$$children;
     var indexOfThis = siblings.indexOf(this);
