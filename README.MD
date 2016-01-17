@@ -1,5 +1,4 @@
-[![Build Status](https://travis-ci.org/stonelasley/build-your-own-angular.svg)](https://travis-ci.org/stonelasley/build-your-own-angular)
-
+[![Build Status](https://travis-ci.org/stonelasley/build-your-own-angular.svg)](https://travis-ci.org/stonelasley/build-your-own-angular)  [![Coverage Status](https://coveralls.io/repos/stonelasley/build-your-own-angular/badge.svg?branch=master&service=github)](https://coveralls.io/github/stonelasley/build-your-own-angular?branch=master)
 ## Build your own Angular
 
 http://teropa.info/build-your-own-angular
