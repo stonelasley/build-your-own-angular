@@ -2167,5 +2167,47 @@ describe('Scope', function () {
       expect(childListener.calls.mostRecent().args[0].targetScope).toBe(scope);
     });
 
+    it('attaches current scope on $emit', function () {
+
+      var currentScopeOnScope, currentScopeOnParent;
+
+      var scopeListener = function (event) {
+        currentScopeOnScope = event.currentScope;
+      };
+
+      var parentListener = function (event) {
+        currentScopeOnParent = event.currentScope;
+      };
+
+      scope.$on('someEvent', scopeListener);
+      parent.$on('someEvent', parentListener);
+
+      scope.$emit('someEvent');
+
+      expect(currentScopeOnScope).toBe(scope);
+      expect(currentScopeOnParent).toBe(parent);
+    });
+
+    it('attaches current scope on $broadcast', function () {
+
+      var currentScopeOnScope, currentScopeOnChild;
+
+      var scopeListener = function (event) {
+        currentScopeOnScope = event.currentScope;
+      };
+
+      var childListener = function (event) {
+        currentScopeOnChild = event.currentScope;
+      };
+
+      scope.$on('someEvent', scopeListener);
+      child.$on('someEvent', childListener);
+
+      scope.$broadcast('someEvent');
+
+      expect(currentScopeOnScope).toBe(scope);
+      expect(currentScopeOnChild).toBe(child);
+    });
+
   });
 });
