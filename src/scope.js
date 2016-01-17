@@ -51,7 +51,7 @@ Scope.prototype.$beginPhase = function (phase) {
 Scope.prototype.$broadcast = function (eventName) {
 
   var additionalArgs = _.rest(arguments);
-  this.$$fireEventOnScope(eventName, additionalArgs);
+  return this.$$fireEventOnScope(eventName, additionalArgs);
 };
 
 Scope.prototype.$clearPhase = function () {
@@ -114,7 +114,7 @@ Scope.prototype.$digest = function () {
 Scope.prototype.$emit = function (eventName) {
 
   var additionalArgs = _.rest(arguments);
-  this.$$fireEventOnScope(eventName, additionalArgs);
+  return this.$$fireEventOnScope(eventName, additionalArgs);
 };
 
 Scope.prototype.$eval = function (expr, locals) {
@@ -410,6 +410,7 @@ Scope.prototype.$$fireEventOnScope = function (eventName, additionalArgs) {
   _.forEach(listeners, function (listener) {
     listener.apply(null, listenerArgs);
   });
+  return event;
 };
 
 Scope.prototype.$$flushApplyAsync = function () {
