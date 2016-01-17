@@ -1978,7 +1978,7 @@ describe('Scope', function () {
 
     });
 
-    _.forEach(['$emit', '$broadcast'], function(method){
+    _.forEach(['$emit', '$broadcast'], function (method) {
 
       it('calls the listeners of the matching event on ' + method, function () {
 
@@ -2045,7 +2045,7 @@ describe('Scope', function () {
 
       });
 
-      it(method+' can be deregistered', function () {
+      it(method + ' can be deregistered', function () {
 
         var listener = jasmine.createSpy();
         var deregister = scope.$on('someEvent', listener);
@@ -2075,6 +2075,36 @@ describe('Scope', function () {
         expect(nextListener).toHaveBeenCalled();
 
       });
+    });
+
+    it('propogates up the scope hierarchy on $emit', function () {
+
+      var parentListener = jasmine.createSpy();
+      var scopeListener = jasmine.createSpy();
+
+      parent.$on('someEvent', parentListener);
+      scope.$on('someEvent', scopeListener);
+
+      scope.$emit('someEvent');
+
+      expect(scopeListener).toHaveBeenCalled();
+      expect(parentListener).toHaveBeenCalled();
+    });
+
+    it('propogates the same event up on $emit', function () {
+
+      var parentListener = jasmine.createSpy();
+      var scopeListener = jasmine.createSpy();
+
+      parent.$on('someEvent', parentListener);
+      parent.$on('someEvent', scopeListener);
+
+      scope.$emit('someEvent');
+
+      var scopeEvent = scopeListener.calls.mostRecent().args[0];
+      var parentEvent = parentListener.calls.mostRecent().args[0];
+      expect(scopeEvent).toBe(parentEvent);
+
     });
 
   });

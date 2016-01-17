@@ -50,8 +50,10 @@ Scope.prototype.$beginPhase = function (phase) {
 
 Scope.prototype.$broadcast = function (eventName) {
 
-  var additionalArgs = _.rest(arguments);
-  return this.$$fireEventOnScope(eventName, additionalArgs);
+  var event = {name: eventName};
+  var listenerArgs = [event].concat(_.rest(arguments));
+  this.$$fireEventOnScope(eventName, listenerArgs);
+  return event;
 };
 
 Scope.prototype.$clearPhase = function () {
@@ -112,9 +114,15 @@ Scope.prototype.$digest = function () {
 };
 
 Scope.prototype.$emit = function (eventName) {
+  var event = {name: eventName};
+  var listenerArgs = [event].concat(_.rest(arguments));
+  var scope = this;
 
-  var additionalArgs = _.rest(arguments);
-  return this.$$fireEventOnScope(eventName, additionalArgs);
+  do {
+    scope.$$fireEventOnScope(eventName, listenerArgs);
+    scope = scope.$parent;
+  } while (scope);
+  return event;
 };
 
 Scope.prototype.$eval = function (expr, locals) {
@@ -407,10 +415,8 @@ Scope.prototype.$$everyScope = function (fn) {
   }
 };
 
-Scope.prototype.$$fireEventOnScope = function (eventName, additionalArgs) {
+Scope.prototype.$$fireEventOnScope = function (eventName, listenerArgs) {
 
-  var event = {name: eventName};
-  var listenerArgs = [event].concat(additionalArgs);
   var listeners = this.$$listeners[eventName] || [];
   var i = 0;
 
