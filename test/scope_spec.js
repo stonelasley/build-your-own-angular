@@ -2302,5 +2302,17 @@ describe('Scope', function () {
       expect(listener).toHaveBeenCalled();
     });
 
+    it('no longers calls listener after destruction', function () {
+
+      var listener = jasmine.createSpy();
+
+      scope.$on('myEvent', listener);
+
+      scope.$destroy();
+
+      scope.$emit('myEvent');
+      expect(listener).not.toHaveBeenCalled();
+    });
+
   });
 });
