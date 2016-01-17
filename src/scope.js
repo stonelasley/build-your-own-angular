@@ -50,7 +50,7 @@ Scope.prototype.$beginPhase = function (phase) {
 
 Scope.prototype.$broadcast = function (eventName) {
 
-  var event = {name: eventName};
+  var event = {name: eventName, targetScope: this};
   var listenerArgs = [event].concat(_.rest(arguments));
 
   this.$$everyScope(function (scope) {
@@ -119,7 +119,7 @@ Scope.prototype.$digest = function () {
 };
 
 Scope.prototype.$emit = function (eventName) {
-  var event = {name: eventName};
+  var event = {name: eventName, targetScope: this};
   var listenerArgs = [event].concat(_.rest(arguments));
   var scope = this;
 

@@ -2139,5 +2139,33 @@ describe('Scope', function () {
       expect(scopeEvent).toBe(childEvent);
     });
 
+    it('attaches target scope on $emit', function () {
+
+      var scopeListener = jasmine.createSpy();
+      var parentListener = jasmine.createSpy();
+
+      scope.$on('someEvent', scopeListener);
+      parent.$on('someEvent', parentListener);
+
+      scope.$emit('someEvent');
+
+      expect(scopeListener.calls.mostRecent().args[0].targetScope).toBe(scope);
+      expect(parentListener.calls.mostRecent().args[0].targetScope).toBe(scope);
+    });
+
+    it('attaches target Scope on $broadcast', function () {
+
+      var scopeListener = jasmine.createSpy();
+      var childListener = jasmine.createSpy();
+
+      scope.$on('someEvent', scopeListener);
+      child.$on('someEvent', childListener);
+
+      scope.$broadcast('someEvent');
+
+      expect(scopeListener.calls.mostRecent().args[0].targetScope).toBe(scope);
+      expect(childListener.calls.mostRecent().args[0].targetScope).toBe(scope);
+    });
+
   });
 });
