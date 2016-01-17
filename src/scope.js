@@ -56,6 +56,7 @@ Scope.prototype.$broadcast = function (eventName) {
   this.$$everyScope(function (scope) {
     event.currentScope = scope;
     scope.$$fireEventOnScope(eventName, listenerArgs);
+    event.currentScope = null;
     return true;
   });
 
@@ -129,6 +130,7 @@ Scope.prototype.$emit = function (eventName) {
     scope.$$fireEventOnScope(eventName, listenerArgs);
     scope = scope.$parent;
   } while (scope);
+  event.currentScope = null;
   return event;
 };
 

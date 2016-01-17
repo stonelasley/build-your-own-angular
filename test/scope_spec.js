@@ -2077,7 +2077,7 @@ describe('Scope', function () {
       });
     });
 
-    it('propogates up the scope hierarchy on $emit', function () {
+    it('propagates up the scope hierarchy on $emit', function () {
 
       var parentListener = jasmine.createSpy();
       var scopeListener = jasmine.createSpy();
@@ -2091,7 +2091,7 @@ describe('Scope', function () {
       expect(parentListener).toHaveBeenCalled();
     });
 
-    it('propogates the same event up on $emit', function () {
+    it('propagates the same event up on $emit', function () {
 
       var parentListener = jasmine.createSpy();
       var scopeListener = jasmine.createSpy();
@@ -2106,7 +2106,7 @@ describe('Scope', function () {
       expect(scopeEvent).toBe(parentEvent);
     });
 
-    it('propogates down the scope hierarchy on $broadcast', function () {
+    it('propagates down the scope hierarchy on $broadcast', function () {
 
       var scopeListener = jasmine.createSpy();
       var childListener = jasmine.createSpy();
@@ -2123,7 +2123,7 @@ describe('Scope', function () {
       expect(isolatedChildListener).toHaveBeenCalled();
     });
 
-    it('propogates the same event down on $broadcast', function () {
+    it('propagates the same event down on $broadcast', function () {
 
       var scopeListener = jasmine.createSpy();
       var childListener = jasmine.createSpy();
@@ -2207,6 +2207,34 @@ describe('Scope', function () {
 
       expect(currentScopeOnScope).toBe(scope);
       expect(currentScopeOnChild).toBe(child);
+    });
+
+    it('sets currentScope to null after propagation on $emit', function () {
+
+      var event;
+      var scopeListener = function (evt) {
+        event = evt;
+      };
+
+      scope.$on('someEvent', scopeListener);
+
+      scope.$emit('someEvent');
+
+      expect(event.currentScope).toBe(null);
+    });
+
+    it('sets currentScope to null after propagation on $broadcast', function () {
+
+      var event;
+      var scopeListener = function (evt) {
+        event = evt;
+      };
+
+      scope.$on('someEvent', scopeListener);
+
+      scope.$broadcast('someEvent');
+
+      expect(event.currentScope).toBe(null);
     });
 
   });
