@@ -2044,6 +2044,18 @@ describe('Scope', function () {
         expect(returnedEvent.name).toEqual('someEvent');
 
       });
+
+      it(method+' can be deregistered', function () {
+
+        var listener = jasmine.createSpy();
+        var deregister = scope.$on('someEvent', listener);
+
+        deregister();
+
+        scope[method]('someEvent');
+
+        expect(listener).not.toHaveBeenCalled();
+      });
     });
 
   });

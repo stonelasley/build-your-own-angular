@@ -167,6 +167,12 @@ Scope.prototype.$on = function (eventName, listener) {
     this.$$listeners[eventName] = listeners = [];
   }
   listeners.push(listener);
+  return function () {
+    var index = listeners.indexOf(listener);
+    if (index >= 0) {
+      listeners.splice(index, 1);
+    }
+  };
 };
 
 Scope.prototype.$watch = function (watchFn, listenerFn, valueEq) {
