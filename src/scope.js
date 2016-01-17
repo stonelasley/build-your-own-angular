@@ -48,6 +48,15 @@ Scope.prototype.$beginPhase = function (phase) {
   this.$$phase = phase;
 };
 
+Scope.prototype.$broadcast = function (eventName) {
+
+  var listeners = this.$$listeners[eventName] || [];
+
+  _.forEach(listeners, function (listener) {
+    listener();
+  });
+};
+
 Scope.prototype.$clearPhase = function () {
   this.$$phase = null;
 };
@@ -103,6 +112,15 @@ Scope.prototype.$digest = function () {
       console.error(e);
     }
   }
+};
+
+Scope.prototype.$emit = function (eventName) {
+
+  var listeners = this.$$listeners[eventName] || [];
+
+  _.forEach(listeners, function (listener) {
+    listener();
+  });
 };
 
 Scope.prototype.$eval = function (expr, locals) {
