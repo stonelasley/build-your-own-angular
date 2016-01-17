@@ -1961,9 +1961,12 @@ describe('Scope', function () {
 
     it('registers different listeners for ever scope', function () {
 
-      var listener1 = function () {};
-      var listener2 = function () {};
-      var listener3 = function () {};
+      var listener1 = function () {
+      };
+      var listener2 = function () {
+      };
+      var listener3 = function () {
+      };
 
       scope.$on('someEvent', listener1);
       child.$on('someEvent', listener2);
