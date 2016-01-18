@@ -1,5 +1,7 @@
 'use strict';
 
+var _ = require('lodash');
+
 function parse(expr) {
 
   var lexer = new Lexer();
@@ -57,6 +59,15 @@ ASTCompiler.prototype.compile = function (text) {
   /* jshint +W054 */
 };
 
+ASTCompiler.prototype.escape = function (value) {
+
+  if (_.isString(value)) {
+    return '\'' + value + '\'';
+  } else {
+    return value;
+  }
+};
+
 ASTCompiler.prototype.recurse = function (ast) {
 
   switch (ast.type) {
@@ -65,7 +76,7 @@ ASTCompiler.prototype.recurse = function (ast) {
       this.state.body.push('return ', this.recurse(ast.body), ';');
       break;
     case AST.Literal:
-      return ast.value;
+      return this.escape(ast.value);
   }
 };
 
@@ -92,6 +103,9 @@ Lexer.prototype.lex = function (text) {
       (this.ch === '.' && this.isNumber(this.peek()))) {
 
       this.readNumber();
+    } else if (this.ch === '\'' || this.ch === '"') {
+
+      this.readString(this.ch);
     } else {
 
       throw 'Unexpected next character: ' + this.ch;
@@ -141,6 +155,30 @@ Lexer.prototype.readNumber = function () {
     text: number,
     value: Number(number)
   });
+};
+
+Lexer.prototype.readString = function (quote) {
+
+  this.index++;
+  var string = '';
+  while (this.index < this.text.length) {
+
+    var ch = this.text.charAt(this.index);
+
+    if (ch === quote) {
+      this.index++;
+      this.tokens.push({
+        text: string,
+        value: string
+      });
+      return;
+    } else {
+      string += ch;
+    }
+
+    this.index++;
+  }
+  throw 'Unmatched quote';
 };
 
 Parser.prototype.parse = function (text) {
