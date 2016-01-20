@@ -177,16 +177,25 @@ Lexer.prototype.readString = function (quote) {
     var ch = this.text.charAt(this.index);
     if (escape) {
 
-      var replacement = ESCAPES[ch];
-      if (replacement) {
+      if (ch === 'u') {
 
-        string += replacement;
+        var hex = this.text.substring(this.index + 1, this.index + 5);
+        this.index += 4;
+        string += String.fromCharCode(parseInt(hex, 16));
       } else {
 
-        string += ch;
+        var replacement = ESCAPES[ch];
+        if (replacement) {
+
+          string += replacement;
+        } else {
+
+          string += ch;
+        }
       }
       escape = false;
     } else if (ch === quote) {
+
       this.index++;
       this.tokens.push({
         text: string,
@@ -194,8 +203,10 @@ Lexer.prototype.readString = function (quote) {
       });
       return;
     } else if (ch === '\\') {
+
       escape = true;
     } else {
+
       string += ch;
     }
 
