@@ -2,7 +2,7 @@
 
 var _ = require('lodash');
 
-var ESCAPES = {'n':'\n', 'f':'\f', 'r':'\r', 't':'\t', 'v':'\v', '\'':'\'', '"':'"' };
+var ESCAPES = {'n': '\n', 'f': '\f', 'r': '\r', 't': '\t', 'v': '\v', '\'': '\'', '"': '"'};
 
 function parse(expr) {
 
@@ -178,7 +178,7 @@ Lexer.prototype.readString = function (quote) {
     if (escape) {
 
       var replacement = ESCAPES[ch];
-      if(replacement) {
+      if (replacement) {
 
         string += replacement;
       } else {
@@ -193,9 +193,9 @@ Lexer.prototype.readString = function (quote) {
         value: string
       });
       return;
-    } else if (ch ==='\\') {
+    } else if (ch === '\\') {
       escape = true;
-    }else {
+    } else {
       string += ch;
     }
 
