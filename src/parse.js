@@ -20,6 +20,7 @@ AST.ArrayExpression = 'ArrayExpression';
 AST.Literal = 'Literal';
 AST.ObjectExpression = 'ObjectExpression';
 AST.Program = 'Program';
+AST.Property = 'Property';
 
 function ASTCompiler(astBuilder) {
 
@@ -91,8 +92,22 @@ AST.prototype.expect = function (e) {
 
 AST.prototype.object = function (e) {
 
+  var properties = [];
+  if (!this.peek('}')) {
+
+    do {
+
+      var property = {type: AST.Property};
+      property.key = this.constant();
+      this.consume(':');
+      property.value = this.primary();
+      properties.push(property);
+
+    } while (this.expect(','));
+  }
+
   this.consume('}');
-  return {type: AST.ObjectExpression};
+  return {type: AST.ObjectExpression, properties: properties};
 };
 
 AST.prototype.peek = function (e) {
@@ -168,7 +183,13 @@ ASTCompiler.prototype.recurse = function (ast) {
       return this.escape(ast.value);
 
     case AST.ObjectExpression:
-      return '{}';
+      var properties = _.map(ast.properties, function (property) {
+
+        var key = this.escape(property.key.value);
+        var value = this.recurse(property.value);
+        return key + ':' + value;
+      }, this);
+      return '{' + properties.join(',') + '}';
 
     case AST.Program:
       this.state.body.push('return ', this.recurse(ast.body), ';');
