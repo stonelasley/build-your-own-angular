@@ -18,6 +18,7 @@ function AST(lexer) {
 
 AST.ArrayExpression = 'ArrayExpression';
 AST.Literal = 'Literal';
+AST.ObjectExpression = 'ObjectExpression';
 AST.Program = 'Program';
 
 function ASTCompiler(astBuilder) {
@@ -42,7 +43,7 @@ AST.prototype.arrayDeclaration = function () {
   if (!this.peek(']')) {
 
     do {
-      
+
       if (this.peek(']')) {
         break;
       }
@@ -88,6 +89,12 @@ AST.prototype.expect = function (e) {
   }
 };
 
+AST.prototype.object = function (e) {
+
+  this.consume('}');
+  return {type: AST.ObjectExpression};
+};
+
 AST.prototype.peek = function (e) {
 
   if (this.tokens.length > 0) {
@@ -104,6 +111,9 @@ AST.prototype.primary = function () {
   if (this.expect('[')) {
 
     return this.arrayDeclaration();
+  } else if (this.expect('{')) {
+
+    return this.object();
   } else if (this.constants.hasOwnProperty(this.tokens[0].text)) {
 
     return this.constants[this.consume().text];
@@ -148,16 +158,21 @@ ASTCompiler.prototype.recurse = function (ast) {
 
   switch (ast.type) {
 
-    case AST.Program:
-      this.state.body.push('return ', this.recurse(ast.body), ';');
-      break;
-    case AST.Literal:
-      return this.escape(ast.value);
     case AST.ArrayExpression:
       var elements = _.map(ast.elements, function (element) {
         return this.recurse(element);
       }, this);
       return '[' + elements.join(',') + ']';
+
+    case AST.Literal:
+      return this.escape(ast.value);
+
+    case AST.ObjectExpression:
+      return '{}';
+
+    case AST.Program:
+      this.state.body.push('return ', this.recurse(ast.body), ';');
+      break;
   }
 };
 
@@ -166,6 +181,10 @@ ASTCompiler.prototype.stringEscapeFn = function (c) {
 };
 
 ASTCompiler.prototype.stringEscapeRegex = /[^a-zA-Z0-9]/g;
+
+Lexer.prototype.is = function (chs) {
+  return chs.indexOf(this.ch) >= 0;
+};
 
 Lexer.prototype.isExpOperator = function (ch) {
   return ch === '-' || ch === '+' || this.isNumber(ch);
@@ -197,13 +216,13 @@ Lexer.prototype.lex = function (text) {
 
     this.ch = this.text.charAt(this.index);
     if (this.isNumber(this.ch) ||
-      (this.ch === '.' && this.isNumber(this.peek()))) {
+      (this.is('.') && this.isNumber(this.peek()))) {
 
       this.readNumber();
-    } else if (this.ch === '\'' || this.ch === '"') {
+    } else if (this.is('\'"')) {
 
       this.readString(this.ch);
-    } else if (this.ch === '[' || this.ch === ']' || this.ch === ',') {
+    } else if (this.is('[],{}:')) {
 
       this.tokens.push({
         text: this.ch
