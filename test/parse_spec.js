@@ -142,4 +142,10 @@ describe('parse', function () {
     var fn = parse('[1, "two", [3], true]');
     expect(fn()).toEqual([1, 'two', [3], true]);
   });
+
+  it('will parse an array with a trailing comma', function () {
+
+    var fn = parse('[1, 2, 3, ]');
+    expect(fn()).toEqual([1, 2, 3]);
+  });
 });
