@@ -166,4 +166,11 @@ describe('parse', function () {
     var fn = parse('{a: 1, b: [2, 3], c: {d: 4}}');
     expect(fn()).toEqual({a: 1, b: [2, 3], c: {d: 4}});
   });
+
+  it('looks up an attribute from the scope', function () {
+
+    var fn = parse('aKey');
+    expect(fn({aKey: 42})).toBe(42);
+    expect(fn({})).toBeUndefined();
+  });
 });

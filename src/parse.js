@@ -142,6 +142,9 @@ AST.prototype.primary = function () {
   } else if (this.constants.hasOwnProperty(this.tokens[0].text)) {
 
     return this.constants[this.consume().text];
+  } else if (this.peek().identifier) {
+
+    return this.identifier();
   } else {
 
     return this.constant();
@@ -159,7 +162,7 @@ ASTCompiler.prototype.compile = function (text) {
   this.recurse(ast);
 
   /* jshint -W054 */
-  return new Function(this.state.body.join(''));
+  return new Function('s', this.state.body.join(''));
   /* jshint +W054 */
 };
 
@@ -179,6 +182,11 @@ ASTCompiler.prototype.escape = function (value) {
   }
 };
 
+ASTCompiler.prototype.nonComputedMember = function (left, right) {
+
+  return '(' + left + ').' + right;
+};
+
 ASTCompiler.prototype.recurse = function (ast) {
 
   switch (ast.type) {
@@ -191,6 +199,9 @@ ASTCompiler.prototype.recurse = function (ast) {
 
     case AST.Literal:
       return this.escape(ast.value);
+
+    case AST.Identifier:
+      return this.nonComputedMember('s', ast.name);
 
     case AST.ObjectExpression:
       var properties = _.map(ast.properties, function (property) {
