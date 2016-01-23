@@ -11,3 +11,4 @@ http://teropa.info/build-your-own-angular
 3. Watching Collections
 4. Scope Events
 5. Expressions and Filters
+6. Lookup and Function Call Expressions
