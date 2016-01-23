@@ -18,6 +18,7 @@ function AST(lexer) {
 
 AST.ArrayExpression = 'ArrayExpression';
 AST.Literal = 'Literal';
+AST.Identifier = 'Identifier';
 AST.ObjectExpression = 'ObjectExpression';
 AST.Program = 'Program';
 AST.Property = 'Property';
@@ -90,6 +91,11 @@ AST.prototype.expect = function (e) {
   }
 };
 
+AST.prototype.identifier = function () {
+
+  return {type: AST.Identifier, name: this.consume().text};
+};
+
 AST.prototype.object = function (e) {
 
   var properties = [];
@@ -98,7 +104,11 @@ AST.prototype.object = function (e) {
     do {
 
       var property = {type: AST.Property};
-      property.key = this.constant();
+      if (this.peek().identifier) {
+        property.key = this.identifier();
+      } else {
+        property.key = this.constant();
+      }
       this.consume(':');
       property.value = this.primary();
       properties.push(property);
@@ -185,7 +195,10 @@ ASTCompiler.prototype.recurse = function (ast) {
     case AST.ObjectExpression:
       var properties = _.map(ast.properties, function (property) {
 
-        var key = this.escape(property.key.value);
+        var key = property.key.type === AST.Identifier ?
+          property.key.name :
+          this.escape(property.key.value);
+        this.escape(property.key.value);
         var value = this.recurse(property.value);
         return key + ':' + value;
       }, this);
@@ -284,7 +297,10 @@ Lexer.prototype.readIdent = function () {
     this.index++;
   }
 
-  var token = {text: text};
+  var token = {
+    text: text,
+    identifier: true
+  };
 
   this.tokens.push(token);
 };
