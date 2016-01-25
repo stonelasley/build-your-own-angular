@@ -182,6 +182,11 @@ ASTCompiler.prototype.escape = function (value) {
   }
 };
 
+ASTCompiler.prototype.if_ = function (test, consequent) {
+
+  this.state.body.push('if(', test, '){', consequent, '}');
+};
+
 ASTCompiler.prototype.nonComputedMember = function (left, right) {
 
   return '(' + left + ').' + right;
@@ -201,7 +206,9 @@ ASTCompiler.prototype.recurse = function (ast) {
       return this.escape(ast.value);
 
     case AST.Identifier:
-      return this.nonComputedMember('s', ast.name);
+      this.state.body.push('var v0;');
+      this.if_('s', 'v0=' + this.nonComputedMember('s', ast.name) + ';');
+      return 'v0';
 
     case AST.ObjectExpression:
       var properties = _.map(ast.properties, function (property) {
