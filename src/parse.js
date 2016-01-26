@@ -22,6 +22,7 @@ AST.Identifier = 'Identifier';
 AST.ObjectExpression = 'ObjectExpression';
 AST.Program = 'Program';
 AST.Property = 'Property';
+AST.ThisExpression = 'ThisExpression';
 
 function ASTCompiler(astBuilder) {
 
@@ -71,7 +72,8 @@ AST.prototype.constants = {
 
   'null': {type: AST.Literal, value: null},
   'true': {type: AST.Literal, value: true},
-  'false': {type: AST.Literal, value: false}
+  'false': {type: AST.Literal, value: false},
+  'this': {type: AST.ThisExpression}
 };
 
 AST.prototype.consume = function (e) {
@@ -242,6 +244,9 @@ ASTCompiler.prototype.recurse = function (ast) {
     case AST.Program:
       this.state.body.push('return ', this.recurse(ast.body), ';');
       break;
+
+    case AST.ThisExpression:
+      return 's';
   }
 };
 
