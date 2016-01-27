@@ -17,6 +17,7 @@ function AST(lexer) {
 }
 
 AST.ArrayExpression = 'ArrayExpression';
+AST.CallExpression = 'CallExpression';
 AST.Literal = 'Literal';
 AST.Identifier = 'Identifier';
 AST.MemberExpression = 'MemberExpression';
@@ -155,7 +156,7 @@ AST.prototype.primary = function () {
   }
 
   var next;
-  while ((next = this.expect('.', '['))) {
+  while ((next = this.expect('.', '[', '('))) {
 
     if (next.text === '[') {
       primary = {
@@ -165,13 +166,17 @@ AST.prototype.primary = function () {
         computed: true
       };
       this.consume(']');
-    } else {
+    } else if (next.text === '.') {
       primary = {
         type: AST.MemberExpression,
         object: primary,
         property: this.identifier(),
         computed: false
       };
+    } else if (next.text === '(') {
+
+      primary = {type: AST.CallExpression, callee: primary};
+      this.consume(')');
     }
   }
 
@@ -256,6 +261,10 @@ ASTCompiler.prototype.recurse = function (ast) {
         return this.recurse(element);
       }, this);
       return '[' + elements.join(',') + ']';
+
+    case AST.CallExpression:
+      var callee = this.recurse(ast.callee);
+      return callee + '&&' + callee + '()';
 
     case AST.Literal:
       return this.escape(ast.value);
@@ -353,7 +362,7 @@ Lexer.prototype.lex = function (text) {
     } else if (this.is('\'"')) {
 
       this.readString(this.ch);
-    } else if (this.is('[],{}:.')) {
+    } else if (this.is('[],{}:.()')) {
 
       this.tokens.push({
         text: this.ch

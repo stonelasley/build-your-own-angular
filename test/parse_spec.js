@@ -258,4 +258,14 @@ describe('parse', function () {
     var fn = parse('lock[keys["aKey"]]');
     expect(fn({keys: {aKey: 'theKey'}, lock: {theKey: 42}})).toBe(42);
   });
+
+  it('parses a function call', function () {
+
+    var fn = parse('aFunction()');
+    expect(fn({
+      aFunction: function () {
+        return 42;
+      }
+    })).toBe(42);
+  });
 });
