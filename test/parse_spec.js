@@ -187,4 +187,18 @@ describe('parse', function () {
     expect(fn(scope)).toBe(scope);
     expect(fn()).toBeUndefined();
   });
+
+  it('looks up a two-part identifier path from the scope', function () {
+
+    var fn = parse('aKey.anotherKey');
+    expect(fn({aKey: {anotherKey: 42}})).toBe(42);
+    expect(fn({aKey: {}})).toBeUndefined();
+    expect(fn({})).toBeUndefined();
+  });
+
+  it('looks up a member from an object', function () {
+
+    var fn = parse('{aKey: 42}.aKey');
+    expect(fn()).toBe(42);
+  });
 });
