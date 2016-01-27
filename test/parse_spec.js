@@ -231,7 +231,7 @@ describe('parse', function () {
 
     var fn = parse('aKey.anotherKey');
     var scope = {aKey: {anotherKey: 42}};
-    var locals = {aKey: {}}
+    var locals = {aKey: {}};
     expect(fn(scope, locals)).toBeUndefined();
   });
 
