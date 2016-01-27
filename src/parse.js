@@ -100,7 +100,7 @@ AST.prototype.identifier = function () {
   return {type: AST.Identifier, name: this.consume().text};
 };
 
-AST.prototype.object = function (e) {
+AST.prototype.object = function () {
 
   var properties = [];
   if (!this.peek('}')) {
