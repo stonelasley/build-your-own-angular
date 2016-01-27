@@ -86,9 +86,9 @@ AST.prototype.consume = function (e) {
   return token;
 };
 
-AST.prototype.expect = function (e) {
+AST.prototype.expect = function (e1, e2, e3, e4) {
 
-  var token = this.peek(e);
+  var token = this.peek(e1, e2, e3, e4);
   if (token) {
     return this.tokens.shift();
   }
@@ -123,12 +123,12 @@ AST.prototype.object = function (e) {
   return {type: AST.ObjectExpression, properties: properties};
 };
 
-AST.prototype.peek = function (e) {
+AST.prototype.peek = function (e1, e2, e3, e4) {
 
   if (this.tokens.length > 0) {
 
     var text = this.tokens[0].text;
-    if (text === e || !e) {
+    if (text === e1 || text === e2 || text === e3 || text === e4 || (!e1 && !e2 && !e3 && !e4)) {
       return this.tokens[0];
     }
   }
@@ -154,13 +154,25 @@ AST.prototype.primary = function () {
     primary = this.constant();
   }
 
-  while (this.expect('.')) {
+  var next;
+  while ((next = this.expect('.', '['))) {
 
-    primary = {
-      type: AST.MemberExpression,
-      object: primary,
-      property: this.identifier()
-    };
+    if (next.text === '[') {
+      primary = {
+        type: AST.MemberExpression,
+        object: primary,
+        property: this.primary(),
+        computed: true
+      };
+      this.consume(']');
+    } else {
+      primary = {
+        type: AST.MemberExpression,
+        object: primary,
+        property: this.identifier(),
+        computed: false
+      };
+    }
   }
 
   return primary;
@@ -189,6 +201,11 @@ ASTCompiler.prototype.compile = function (text) {
     ) + this.state.body.join('')
   );
   /* jshint +W054 */
+};
+
+ASTCompiler.prototype.computedMember = function (left, right) {
+
+  return '(' + left + ')[' + right + ']';
 };
 
 ASTCompiler.prototype.escape = function (value) {
@@ -254,7 +271,14 @@ ASTCompiler.prototype.recurse = function (ast) {
     case AST.MemberExpression:
       intoId = this.nextId();
       var left = this.recurse(ast.object);
-      this.if_(left, this.assign(intoId, this.nonComputedMember(left, ast.property.name)));
+      if (ast.computed) {
+
+        var right = this.recurse(ast.property);
+        this.if_(left, this.assign(intoId, this.computedMember(left, right)));
+      } else {
+
+        this.if_(left, this.assign(intoId, this.nonComputedMember(left, ast.property.name)));
+      }
       return intoId;
 
     case AST.ObjectExpression:
