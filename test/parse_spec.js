@@ -313,4 +313,32 @@ describe('parse', function () {
       }
     })).toBe(42);
   });
+
+  it('calls methods accessed as computed properties', function () {
+
+    var scope = {
+      anObject: {
+        aMember: 42,
+        aFunction: function () {
+          return this.aMember;
+        }
+      }
+    };
+    var fn = parse('anObject["aFunction"]()');
+    expect(fn(scope)).toBe(42);
+  });
+
+  it('calls methods accessed as non-computed properties', function () {
+
+    var scope = {
+      anObject: {
+        aMember: 42,
+        aFunction: function () {
+          return this.aMember;
+        }
+      }
+    };
+    var fn = parse('anObject.aFunction()');
+    expect(fn(scope)).toBe(42);
+  });
 });
