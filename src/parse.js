@@ -124,6 +124,18 @@ AST.prototype.object = function () {
   return {type: AST.ObjectExpression, properties: properties};
 };
 
+AST.prototype.parseArguments = function () {
+
+  var args = [];
+  if (!this.peek(')')) {
+
+    do {
+      args.push(this.primary());
+    } while (this.expect(','));
+  }
+  return args;
+};
+
 AST.prototype.peek = function (e1, e2, e3, e4) {
 
   if (this.tokens.length > 0) {
@@ -175,7 +187,11 @@ AST.prototype.primary = function () {
       };
     } else if (next.text === '(') {
 
-      primary = {type: AST.CallExpression, callee: primary};
+      primary = {
+        type: AST.CallExpression,
+        callee: primary,
+        arguments: this.parseArguments()
+      };
       this.consume(')');
     }
   }
@@ -264,7 +280,10 @@ ASTCompiler.prototype.recurse = function (ast) {
 
     case AST.CallExpression:
       var callee = this.recurse(ast.callee);
-      return callee + '&&' + callee + '()';
+      var args = _.map(ast.arguments, function (arg) {
+        return this.recurse(arg);
+      }, this);
+      return callee + '&&' + callee + '(' + args.join(',') + ')';
 
     case AST.Literal:
       return this.escape(ast.value);
