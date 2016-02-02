@@ -16,6 +16,7 @@ function AST(lexer) {
   this.lexer = lexer;
 }
 
+AST.AssignmentExpression = 'AssignmentExpression';
 AST.ArrayExpression = 'ArrayExpression';
 AST.CallExpression = 'CallExpression';
 AST.Literal = 'Literal';
@@ -52,11 +53,22 @@ AST.prototype.arrayDeclaration = function () {
       if (this.peek(']')) {
         break;
       }
-      elements.push(this.primary());
+      elements.push(this.assignment());
     } while (this.expect(','));
   }
   this.consume(']');
   return {type: AST.ArrayExpression, elements: elements};
+};
+
+AST.prototype.assignment = function () {
+
+  var left = this.primary();
+  if (this.expect('=')) {
+
+    var right = this.primary();
+    return {type: AST.AssignmentExpression, left: left, right: right};
+  }
+  return left;
 };
 
 AST.prototype.ast = function (text) {
@@ -114,7 +126,7 @@ AST.prototype.object = function () {
         property.key = this.constant();
       }
       this.consume(':');
-      property.value = this.primary();
+      property.value = this.assignment();
       properties.push(property);
 
     } while (this.expect(','));
@@ -130,7 +142,7 @@ AST.prototype.parseArguments = function () {
   if (!this.peek(')')) {
 
     do {
-      args.push(this.primary());
+      args.push(this.assignment());
     } while (this.expect(','));
   }
   return args;
@@ -200,7 +212,7 @@ AST.prototype.primary = function () {
 };
 
 AST.prototype.program = function () {
-  return {type: AST.Program, body: this.primary()};
+  return {type: AST.Program, body: this.assignment()};
 };
 
 ASTCompiler.prototype.assign = function (id, value) {
@@ -271,6 +283,17 @@ ASTCompiler.prototype.recurse = function (ast, context) {
 
   var intoId;
   switch (ast.type) {
+
+    case AST.AssignmentExpression:
+      var leftContext = {};
+      this.recurse(ast.left, leftContext);
+      var leftExpr;
+      if (leftContext.computed) {
+        leftExpr = this.computedMember(leftContext.context, leftContext.name);
+      } else {
+        leftExpr = this.nonComputedMember(leftContext.context, leftContext.name);
+      }
+      return this.assign(leftExpr, this.recurse(ast.right));
 
     case AST.ArrayExpression:
       var elements = _.map(ast.elements, function (element) {
@@ -405,7 +428,7 @@ Lexer.prototype.lex = function (text) {
     } else if (this.is('\'"')) {
 
       this.readString(this.ch);
-    } else if (this.is('[],{}:.()')) {
+    } else if (this.is('[],{}:.()=')) {
 
       this.tokens.push({
         text: this.ch
