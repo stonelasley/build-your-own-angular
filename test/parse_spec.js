@@ -405,4 +405,12 @@ describe('parse', function () {
     fn(scope);
     expect(scope.anArray[0].anAttribute).toBe(42);
   });
+
+  it('create the objects in the assignment path that do not exist', function () {
+
+    var fn = parse('some["nested"].property.path = 42');
+    var scope = {};
+    fn(scope);
+    expect(scope.some.nested.property.path).toBe(42);
+  });
 });
