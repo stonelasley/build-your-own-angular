@@ -418,7 +418,7 @@ describe('parse', function () {
 
     expect(function () {
       var fn = parse('aFunction.constructor("return window;")()');
-      
+
       fn({
         aFunction: function () {
         }
@@ -475,5 +475,17 @@ describe('parse', function () {
       var fn = parse('obj.__lookupSetter__("evil")')
       fn({obj: {}});
     }).toThrow();
+  });
+
+  it('does not allow accessing window as computed property', function () {
+
+    var fn = parse('anObject["wnd"]');
+    expect(function () {fn({anObject: {wnd: window}})}).toThrow();
+  });
+
+  it('does not allow accessing window as non-computed property', function () {
+
+    var fn = parse('anObject.wnd');
+    expect(function () {fn({anObject: {wnd: window}})}).toThrow();
   });
 });
