@@ -351,7 +351,7 @@ ASTCompiler.prototype.recurse = function (ast, context, create) {
           callee = this.nonComputedMember(callContext.context, callContext.name);
         }
       }
-      return callee + '&&' + callee + '(' + args.join(',') + ')';
+      return callee + '&&ensureSafeObject(' + callee + '(' + args.join(',') + '))';
 
     case AST.Literal:
       return this.escape(ast.value);

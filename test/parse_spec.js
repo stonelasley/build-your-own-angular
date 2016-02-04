@@ -480,21 +480,35 @@ describe('parse', function () {
   it('does not allow accessing window as computed property', function () {
 
     var fn = parse('anObject["wnd"]');
-    expect(function () {fn({anObject: {wnd: window}})}).toThrow();
+    expect(function () {
+      fn({anObject: {wnd: window}})
+    }).toThrow();
   });
 
   it('does not allow accessing window as non-computed property', function () {
 
     var fn = parse('anObject.wnd');
-    expect(function () {fn({anObject: {wnd: window}})}).toThrow();
+    expect(function () {
+
+      fn({anObject: {wnd: window}})
+    }).toThrow();
   });
 
   it('does not allow calling methods on window', function () {
 
     var fn = parse('wnd.scrollTo(0)');
-    expect(function (){
+    expect(function () {
 
       fn({wnd: window})
+    }).toThrow();
+  });
+
+  it('does not allow functions to return window', function () {
+
+    var fn = parse('getWnd()');
+    expect(function () {
+
+      fn({getWnd: _.constant(window)});
     }).toThrow();
   });
 });
