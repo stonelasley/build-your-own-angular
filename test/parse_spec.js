@@ -423,7 +423,7 @@ describe('parse', function () {
         aFunction: function () {
         }
       });
-    }).toThrow()
+    }).toThrow();
   });
 
   it('does not allow accessing __proto__', function () {
@@ -472,7 +472,7 @@ describe('parse', function () {
 
     expect(function () {
 
-      var fn = parse('obj.__lookupSetter__("evil")')
+      var fn = parse('obj.__lookupSetter__("evil")');
       fn({obj: {}});
     }).toThrow();
   });
@@ -481,7 +481,7 @@ describe('parse', function () {
 
     var fn = parse('anObject["wnd"]');
     expect(function () {
-      fn({anObject: {wnd: window}})
+      fn({anObject: {wnd: window}});
     }).toThrow();
   });
 
@@ -490,7 +490,7 @@ describe('parse', function () {
     var fn = parse('anObject.wnd');
     expect(function () {
 
-      fn({anObject: {wnd: window}})
+      fn({anObject: {wnd: window}});
     }).toThrow();
   });
 
@@ -499,7 +499,7 @@ describe('parse', function () {
     var fn = parse('wnd.scrollTo(0)');
     expect(function () {
 
-      fn({wnd: window})
+      fn({wnd: window});
     }).toThrow();
   });
 

@@ -405,7 +405,7 @@ ASTCompiler.prototype.recurse = function (ast, context, create) {
         ensureSafeMemberName(ast.property.name);
         if (create) {
           this.if_(this.not(this.nonComputedMember(left, ast.property.name)),
-            this.assign(this.nonComputedMember(left, ast.property.name), '{}'))
+            this.assign(this.nonComputedMember(left, ast.property.name), '{}'));
         }
 
         this.if_(left,
