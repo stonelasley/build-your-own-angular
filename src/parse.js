@@ -239,6 +239,11 @@ ASTCompiler.prototype.addEnsureSafeMemberName = function (expr) {
   this.state.body.push('ensureSafeMemberName(' + expr + ');');
 };
 
+ASTCompiler.prototype.addEnsureSafeObject = function (expr) {
+
+  this.state.body.push('ensureSafeObject(' + expr + ');');
+};
+
 ASTCompiler.prototype.assign = function (id, value) {
 
   return id + '=' + value + ';';
@@ -339,6 +344,7 @@ ASTCompiler.prototype.recurse = function (ast, context, create) {
         return this.recurse(arg);
       }, this);
       if (callContext.name) {
+        this.addEnsureSafeObject(callContext.context);
         if (callContext.computed) {
           callee = this.computedMember(callContext.context, callContext.name);
         } else {
