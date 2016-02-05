@@ -511,4 +511,13 @@ describe('parse', function () {
       fn({getWnd: _.constant(window)});
     }).toThrow();
   });
+
+  it('does not allow functions to assign window', function () {
+
+    var fn = parse('wnd = anObject');
+    expect(function () {
+
+      fn({anObject: window});
+    }).toThrow();
+  });
 });

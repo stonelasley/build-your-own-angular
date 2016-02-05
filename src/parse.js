@@ -329,7 +329,10 @@ ASTCompiler.prototype.recurse = function (ast, context, create) {
       } else {
         leftExpr = this.nonComputedMember(leftContext.context, leftContext.name);
       }
-      return this.assign(leftExpr, this.recurse(ast.right));
+      return this.assign(leftExpr,
+        'ensureSafeObject(' +
+        this.recurse(ast.right)
+        + ')');
 
     case AST.ArrayExpression:
       var elements = _.map(ast.elements, function (element) {
