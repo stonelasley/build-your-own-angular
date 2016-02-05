@@ -532,6 +532,19 @@ describe('parse', function () {
   it('does not allow calling functions on DOM elements', function () {
 
     var fn = parse('el.setAttribute("evil", "true")');
-    expect(function () {fn({el: document.documentElement});}).toThrow();
+    expect(function () {
+      fn({el: document.documentElement});
+    }).toThrow();
+  });
+
+  it('does not allow calling the aliased function constructor', function () {
+
+    var fn = parse('fnConstructor("return window;")');
+    expect(function () {
+      fn({
+        fnConstructor: (function () {
+        }).constructor
+      });
+    }).toThrow();
   });
 });
