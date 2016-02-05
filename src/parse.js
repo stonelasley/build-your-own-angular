@@ -15,9 +15,13 @@ function ensureSafeMemberName(name) {
 }
 
 function ensureSafeObject(obj) {
+
   if (obj) {
     if (obj.window === obj) {
       throw 'Referencing window in Angular expressions is disallowed!';
+    } else if (obj.children && (obj.nodeName || (obj.prop && obj.attr && obj.find))) {
+
+      throw 'Referencing DOM nodes in Angular expressions is disallowed';
     }
   }
   return obj;
