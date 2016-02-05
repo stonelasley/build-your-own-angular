@@ -377,6 +377,7 @@ ASTCompiler.prototype.recurse = function (ast, context, create) {
         context.name = ast.name;
         context.computed = false;
       }
+      this.addEnsureSafeObject(intoId);
       return intoId;
 
     case AST.MemberExpression:
