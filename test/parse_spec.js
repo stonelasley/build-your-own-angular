@@ -764,4 +764,12 @@ describe('parse', function () {
     expect(parse('false && (true || true)')()).toBe(false);
     expect(parse('-((a % 2) === 0 ? 1 : 2)')({a: 42})).toBe(-1);
   });
+
+  it('parses several statement', function () {
+
+    var fn = parse('a = 1; b = 2; c = 3');
+    var scope = {};
+    fn(scope);
+    expect(scope).toEqual({a: 1, b: 2, c: 3});
+  });
 });
