@@ -632,4 +632,9 @@ describe('parse', function () {
 
     expect(parse('36 * 2 % 5')()).toBe(2);
   });
+
+  it('parses an addition', function () {
+
+    expect(parse('21 + 21')()).toBe(42);
+  });
 });
