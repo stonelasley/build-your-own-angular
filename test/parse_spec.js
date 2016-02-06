@@ -703,4 +703,10 @@ describe('parse', function () {
     expect(parse('true || false')()).toBe(true);
     expect(parse('false || false')()).toBe(false);
   });
+
+  it('parses multiple ANDs', function () {
+
+    expect(parse('true && true && true')()).toBe(true);
+    expect(parse('true && true && false')()).toBe(false);
+  });
 });
