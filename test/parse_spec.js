@@ -752,4 +752,9 @@ describe('parse', function () {
 
     expect(parse('0 || 1 ? 0 || 2 : 0 || 3')()).toBe(2);
   });
+
+  it('parses nested ternaries', function () {
+
+    expect(parse('a === b ? 1 > 2 ? c >= a : c : false')({a : 19, b: 19, c: 42})).toBe(42);
+  });
 });
