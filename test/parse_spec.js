@@ -607,4 +607,9 @@ describe('parse', function () {
     expect(parse('-a')({})).toBe(0);
 
   });
+
+  it('parses a ! in a string', function () {
+
+    expect(parse('"!"')()).toBe('!');
+  });
 });

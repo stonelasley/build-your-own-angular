@@ -667,10 +667,12 @@ Lexer.prototype.readString = function (quote) {
 
   this.index++;
   var string = '';
+  var rawString = quote;
   var escape = false;
   while (this.index < this.text.length) {
 
     var ch = this.text.charAt(this.index);
+    rawString += ch;
     if (escape) {
 
       if (ch === 'u') {
@@ -697,7 +699,7 @@ Lexer.prototype.readString = function (quote) {
 
       this.index++;
       this.tokens.push({
-        text: string,
+        text: rawString,
         value: string
       });
       return;
