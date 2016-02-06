@@ -660,4 +660,14 @@ describe('parse', function () {
     expect(parse('42 - a')()).toBe(42);
     expect(parse('b - 20')()).toBe(-20);
   });
+
+  it('parses relational operators', function () {
+
+    expect(parse('1 < 2')()).toBe(true);
+    expect(parse('1 > 2')()).toBe(false);
+    expect(parse('1 <= 2')()).toBe(true);
+    expect(parse('2 <= 2')()).toBe(true);
+    expect(parse('1 >= 2')()).toBe(false);
+    expect(parse('2 >= 2')()).toBe(true);
+  });
 });

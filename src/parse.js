@@ -14,7 +14,11 @@ var OPERATORS = {
   '-': true,
   '*': true,
   '/': true,
-  '%': true
+  '%': true,
+  '>': true,
+  '<': true,
+  '>=': true,
+  '<=': true
 };
 
 
@@ -125,10 +129,10 @@ AST.prototype.arrayDeclaration = function () {
 
 AST.prototype.assignment = function () {
 
-  var left = this.additive();
+  var left = this.relational();
   if (this.expect('=')) {
 
-    var right = this.additive();
+    var right = this.relational();
     return {type: AST.AssignmentExpression, left: left, right: right};
   }
   return left;
@@ -310,6 +314,24 @@ AST.prototype.program = function () {
   return {type: AST.Program, body: this.assignment()};
 };
 
+AST.prototype.relational = function () {
+
+  var left = this.additive();
+  var token;
+
+  while ((token = this.expect('>', '<', '>=', '<='))) {
+
+    left = {
+      type: AST.BinaryExpression,
+      left: left,
+      operator: token.text,
+      right: this.additive()
+    }
+  }
+
+  return left;
+};
+
 AST.prototype.unary = function () {
 
   var token;
@@ -450,7 +472,7 @@ ASTCompiler.prototype.recurse = function (ast, context, create) {
       if (ast.operator === '+' || ast.operator === '-') {
 
         return '(' + this.ifDefined(this.recurse(ast.left), 0) + ')' +
-        ast.operator + '(' + this.ifDefined(this.recurse(ast.right), 0) + ')';
+          ast.operator + '(' + this.ifDefined(this.recurse(ast.right), 0) + ')';
       } else {
         return '(' + this.recurse(ast.left) + ')' +
           ast.operator +
@@ -633,11 +655,17 @@ Lexer.prototype.lex = function (text) {
       this.index++;
     } else {
 
+      var ch = this.ch;
+      var ch2 = this.ch + this.peek();
+      var ch3 = this.ch + this.peek() + this.peek(2);
       var op = OPERATORS[this.ch];
-      if (op) {
+      var op2 = OPERATORS[ch2];
+      var op3 = OPERATORS[ch3];
+      if (op || op2 || op3) {
 
-        this.tokens.push({text: this.ch});
-        this.index++;
+        var token = op3 ? ch3 : (op2 ? ch2 : ch);
+        this.tokens.push({text: token});
+        this.index += token.length;
       } else {
 
         throw 'Unexpected next character: ' + this.ch;
@@ -648,10 +676,11 @@ Lexer.prototype.lex = function (text) {
   return this.tokens;
 };
 
-Lexer.prototype.peek = function () {
+Lexer.prototype.peek = function (n) {
 
-  return this.index < this.text.length - 1 ?
-    this.text.charAt(this.index + 1) :
+  n = n || 1;
+  return this.index + n < this.text.length ?
+    this.text.charAt(this.index + n) :
     false;
 };
 
