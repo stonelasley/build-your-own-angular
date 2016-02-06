@@ -24,7 +24,8 @@ var OPERATORS = {
   '!=': true,
   '===': true,
   '!==': true,
-  '&&': true
+  '&&': true,
+  '||': true
 };
 
 
@@ -136,10 +137,10 @@ AST.prototype.arrayDeclaration = function () {
 
 AST.prototype.assignment = function () {
 
-  var left = this.logicalAND();
+  var left = this.logicalOR();
   if (this.expect('=')) {
 
-    var right = this.logicalAND();
+    var right = this.logicalOR();
     return {type: AST.AssignmentExpression, left: left, right: right};
   }
   return left;
@@ -234,6 +235,22 @@ AST.prototype.logicalAND = function () {
     }
   }
 
+  return left;
+};
+
+AST.prototype.logicalOR = function () {
+
+  var left = this.logicalAND();
+  var token;
+  while ((token = this.expect('||'))) {
+
+    left = {
+      type: AST.LogicalExpression,
+      left: left,
+      operator: token.text,
+      right: this.logicalAND()
+    }
+  }
   return left;
 };
 

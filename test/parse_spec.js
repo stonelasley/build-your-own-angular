@@ -696,4 +696,11 @@ describe('parse', function () {
     expect(parse('true && true')()).toBe(true);
     expect(parse('true && false')()).toBe(false);
   });
+
+  it('parses logical OR', function () {
+
+    expect(parse('true || true')()).toBe(true);
+    expect(parse('true || false')()).toBe(true);
+    expect(parse('false || false')()).toBe(false);
+  });
 });
