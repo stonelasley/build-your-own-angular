@@ -17,8 +17,13 @@ var OPERATORS = {
   '%': true,
   '>': true,
   '<': true,
+  '=': true,
   '>=': true,
-  '<=': true
+  '<=': true,
+  '==': true,
+  '!=': true,
+  '===': true,
+  '!==': true
 };
 
 
@@ -129,10 +134,10 @@ AST.prototype.arrayDeclaration = function () {
 
 AST.prototype.assignment = function () {
 
-  var left = this.relational();
+  var left = this.equality();
   if (this.expect('=')) {
 
-    var right = this.relational();
+    var right = this.equality();
     return {type: AST.AssignmentExpression, left: left, right: right};
   }
   return left;
@@ -180,6 +185,23 @@ AST.prototype.consume = function (e) {
     throw 'Unexpected. Expecting: ' + e;
   }
   return token;
+};
+
+AST.prototype.equality = function () {
+
+  var left = this.relational();
+  var token;
+  while ((token = this.expect('==', '!=', '===', '!=='))) {
+
+    left = {
+      type: AST.BinaryExpression,
+      left: left,
+      operator: token.text,
+      right: this.relational()
+    };
+  }
+
+  return left;
 };
 
 AST.prototype.expect = function (e1, e2, e3, e4) {
@@ -641,7 +663,7 @@ Lexer.prototype.lex = function (text) {
     } else if (this.is('\'"')) {
 
       this.readString(this.ch);
-    } else if (this.is('[],{}:.()=')) {
+    } else if (this.is('[],{}:.()')) {
 
       this.tokens.push({
         text: this.ch
@@ -658,7 +680,7 @@ Lexer.prototype.lex = function (text) {
       var ch = this.ch;
       var ch2 = this.ch + this.peek();
       var ch3 = this.ch + this.peek() + this.peek(2);
-      var op = OPERATORS[this.ch];
+      var op = OPERATORS[ch];
       var op2 = OPERATORS[ch2];
       var op3 = OPERATORS[ch3];
       if (op || op2 || op3) {
