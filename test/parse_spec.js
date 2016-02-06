@@ -654,4 +654,10 @@ describe('parse', function () {
     expect(parse('a + 20')()).toBe(20);
     expect(parse('42 + a')()).toBe(42);
   });
+
+  it('substitutes undefined with zero in subtraction', function () {
+
+    expect(parse('42 - a')()).toBe(42);
+    expect(parse('b - 20')()).toBe(-20);
+  });
 });
