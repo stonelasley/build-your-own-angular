@@ -732,4 +732,9 @@ describe('parse', function () {
 
     expect(parse('false && true || true')()).toBe(true);
   });
+
+  it('parses OR with a lower precedence than equality', function () {
+
+    expect(parse('1 === 2 || 2 === 2')()).toBeTruthy();
+  });
 });
