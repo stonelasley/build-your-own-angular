@@ -680,4 +680,9 @@ describe('parse', function () {
     expect(parse('42 === "42"')()).toBe(false);
     expect(parse('42 !== 42')()).toBe(false);
   });
+
+  it('parses relationals on a higher precedence than equality', function () {
+
+    expect(parse('2 == "2" > 2 === "2"')()).toBe(false);
+  });
 });
