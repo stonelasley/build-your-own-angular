@@ -612,4 +612,9 @@ describe('parse', function () {
 
     expect(parse('"!"')()).toBe('!');
   });
+
+  it('parses a multiplication', function () {
+
+    expect(parse('21 * 2')()).toBe(42);
+  });
 });
