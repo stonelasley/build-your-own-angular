@@ -685,4 +685,9 @@ describe('parse', function () {
 
     expect(parse('2 == "2" > 2 === "2"')()).toBe(false);
   });
+
+  it('parses additives on a higher precedence than relationals', function () {
+
+    expect(parse('2 + 3 < 6 - 2')()).toBe(false);
+  });
 });
