@@ -747,4 +747,9 @@ describe('parse', function () {
     expect(parse('a === 42 ? true: false')({a: 42})).toBe(true);
     expect(parse('a === 42 ? true: false')({a: 43})).toBe(false);
   });
+
+  it('parses OR with a higher precedence than ternary', function () {
+
+    expect(parse('0 || 1 ? 0 || 2 : 0 || 3')()).toBe(2);
+  });
 });
