@@ -625,7 +625,7 @@ describe('parse', function () {
 
   it('parses a modulus', function () {
 
-    expect(parse('84 % 2')()).toBe(0)
+    expect(parse('84 % 2')()).toBe(0);
   });
 
   it('parses many multiplicatives', function () {
