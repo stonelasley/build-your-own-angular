@@ -9,7 +9,8 @@ var ESCAPES = {'n': '\n', 'f': '\f', 'r': '\r', 't': '\t', 'v': '\v', '\'': '\''
 
 var OPERATORS = {
 
-  '+': true
+  '+': true,
+  '!': true
 };
 
 
@@ -274,12 +275,13 @@ AST.prototype.program = function () {
 
 AST.prototype.unary = function () {
 
-  if (this.expect('+')) {
+  var token;
+  if ((token = this.expect('+', '!'))) {
 
     return {
       type: AST.UnaryExpression,
-      operator: '+',
-      argument: this.primary()
+      operator: token.text,
+      argument: this.unary()
     };
   } else {
 
@@ -585,7 +587,7 @@ Lexer.prototype.lex = function (text) {
       var op = OPERATORS[this.ch];
       if (op) {
 
-        this.tokens.push({text: this.sh});
+        this.tokens.push({text: this.ch});
         this.index++;
       } else {
 
