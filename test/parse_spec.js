@@ -727,4 +727,9 @@ describe('parse', function () {
 
     expect(invoked).toBeUndefined();
   });
+
+  it('parses AND with a higher precedence than OR', function () {
+
+    expect(parse('false && true || true')()).toBe(true);
+  });
 });
