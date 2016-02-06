@@ -717,4 +717,14 @@ describe('parse', function () {
     expect(parse('false || false || true')()).toBe(true);
     expect(parse('false || false || false')()).toBe(false);
   });
+
+  it('short-circuits AND', function () {
+
+    var invoked;
+    var scope = {fn: function () {invoked = true;}};
+
+    parse('false && fn()')(scope);
+
+    expect(invoked).toBeUndefined();
+  });
 });
