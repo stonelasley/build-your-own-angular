@@ -721,7 +721,11 @@ describe('parse', function () {
   it('short-circuits AND', function () {
 
     var invoked;
-    var scope = {fn: function () {invoked = true;}};
+    var scope = {
+      fn: function () {
+        invoked = true;
+      }
+    };
 
     parse('false && fn()')(scope);
 
@@ -736,5 +740,11 @@ describe('parse', function () {
   it('parses OR with a lower precedence than equality', function () {
 
     expect(parse('1 === 2 || 2 === 2')()).toBeTruthy();
+  });
+
+  it('parses the ternary expression', function () {
+
+    expect(parse('a === 42 ? true: false')({a: 42})).toBe(true);
+    expect(parse('a === 42 ? true: false')({a: 43})).toBe(false);
   });
 });
