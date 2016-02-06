@@ -648,4 +648,10 @@ describe('parse', function () {
     expect(parse('2 + 4 * 10')()).toBe(42);
     expect(parse('20 * 4 - 38')()).toBe(42);
   });
+
+  it('substitutes undefined with zero in addition', function () {
+
+    expect(parse('a + 20')()).toBe(20);
+    expect(parse('42 + a')()).toBe(42);
+  });
 });
