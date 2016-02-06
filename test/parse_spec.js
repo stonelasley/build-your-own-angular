@@ -709,4 +709,12 @@ describe('parse', function () {
     expect(parse('true && true && true')()).toBe(true);
     expect(parse('true && true && false')()).toBe(false);
   });
+
+  it('parses multiple ORs', function () {
+
+    expect(parse('true || false || true')()).toBe(true);
+    expect(parse('true || true || false')()).toBe(true);
+    expect(parse('false || false || true')()).toBe(true);
+    expect(parse('false || false || false')()).toBe(false);
+  });
 });
