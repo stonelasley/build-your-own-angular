@@ -7,6 +7,11 @@ var BIND = Function.prototype.bind;
 var CALL = Function.prototype.call;
 var ESCAPES = {'n': '\n', 'f': '\f', 'r': '\r', 't': '\t', 'v': '\v', '\'': '\'', '"': '"'};
 
+var OPERATORS = {
+
+  '+': true
+};
+
 
 function ensureSafeFunction(obj) {
 
@@ -72,6 +77,7 @@ AST.ObjectExpression = 'ObjectExpression';
 AST.Program = 'Program';
 AST.Property = 'Property';
 AST.ThisExpression = 'ThisExpression';
+AST.UnaryExpression = 'UnaryExpression';
 
 function ASTCompiler(astBuilder) {
 
@@ -108,10 +114,10 @@ AST.prototype.arrayDeclaration = function () {
 
 AST.prototype.assignment = function () {
 
-  var left = this.primary();
+  var left = this.unary();
   if (this.expect('=')) {
 
-    var right = this.primary();
+    var right = this.unary();
     return {type: AST.AssignmentExpression, left: left, right: right};
   }
   return left;
@@ -259,6 +265,21 @@ AST.prototype.primary = function () {
 
 AST.prototype.program = function () {
   return {type: AST.Program, body: this.assignment()};
+};
+
+AST.prototype.unary = function () {
+
+  if (this.expect('+')) {
+
+    return {
+      type: AST.UnaryExpression,
+      operator: '+',
+      argument: this.primary()
+    };
+  } else {
+
+    return this.primary();
+  }
 };
 
 ASTCompiler.prototype.addEnsureSafeFunction = function (expr) {
@@ -478,6 +499,9 @@ ASTCompiler.prototype.recurse = function (ast, context, create) {
 
     case AST.ThisExpression:
       return 's';
+
+    case AST.UnaryExpression:
+      return ast.operator + '(' + this.recurse(ast.argument) + ')';
   }
 };
 
@@ -546,7 +570,15 @@ Lexer.prototype.lex = function (text) {
       this.index++;
     } else {
 
-      throw 'Unexpected next character: ' + this.ch;
+      var op = OPERATORS[this.ch];
+      if (op) {
+
+        this.tokens.push({text: this.sh});
+        this.index++;
+      } else {
+
+        throw 'Unexpected next character: ' + this.ch;
+      }
     }
   }
 
