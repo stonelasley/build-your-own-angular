@@ -55,6 +55,11 @@ function ensureSafeObject(obj) {
   return obj;
 }
 
+function ifDefined(value, defaultValue) {
+
+  return typeof value === 'undefined' ? defaultValue : value;
+}
+
 function parse(expr) {
 
   var lexer = new Lexer();
@@ -317,13 +322,15 @@ ASTCompiler.prototype.compile = function (text) {
 
   /* jshint -W054 */
   return new Function(
+    'ensureSafeFunction',
     'ensureSafeMemberName',
     'ensureSafeObject',
-    'ensureSafeFunction',
+    'ifDefined',
     fnString)(
+    ensureSafeFunction,
     ensureSafeMemberName,
     ensureSafeObject,
-    ensureSafeFunction);
+    ifDefined);
   /* jshint +W054 */
 };
 
@@ -351,6 +358,11 @@ ASTCompiler.prototype.escape = function (value) {
 ASTCompiler.prototype.if_ = function (test, consequent) {
 
   this.state.body.push('if(', test, '){', consequent, '}');
+};
+
+ASTCompiler.prototype.ifDefined = function (value, defaultValue) {
+
+  return 'ifDefined(' + value + ',' + this.escape(defaultValue) + ')';
 };
 
 ASTCompiler.prototype.getHasOwnProperty = function (object, property) {
@@ -501,7 +513,7 @@ ASTCompiler.prototype.recurse = function (ast, context, create) {
       return 's';
 
     case AST.UnaryExpression:
-      return ast.operator + '(' + this.recurse(ast.argument) + ')';
+      return ast.operator + '(' + this.ifDefined(this.recurse(ast.argument), 0) + ')';
   }
 };
 
