@@ -13,7 +13,8 @@ var OPERATORS = {
   '!': true,
   '-': true,
   '*': true,
-  '/': true
+  '/': true,
+  '%': true
 };
 
 
@@ -178,7 +179,7 @@ AST.prototype.multiplicative = function () {
 
   var left = this.unary();
   var token;
-  if ((token = this.expect('*', '/'))) {
+  if ((token = this.expect('*', '/', '%'))) {
 
     left = {
       type: AST.BinaryExpression,

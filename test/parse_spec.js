@@ -622,4 +622,9 @@ describe('parse', function () {
 
     expect(parse('84 / 2')()).toBe(42);
   });
+
+  it('parses a modulus', function () {
+
+    expect(parse('84 % 2')()).toBe(0)
+  });
 });
