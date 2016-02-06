@@ -23,7 +23,8 @@ var OPERATORS = {
   '==': true,
   '!=': true,
   '===': true,
-  '!==': true
+  '!==': true,
+  '&&': true
 };
 
 
@@ -92,6 +93,7 @@ AST.BinaryExpression = 'BinaryExpression';
 AST.CallExpression = 'CallExpression';
 AST.Literal = 'Literal';
 AST.Identifier = 'Identifier';
+AST.LogicalExpression = 'LogicalExpression';
 AST.MemberExpression = 'MemberExpression';
 AST.ObjectExpression = 'ObjectExpression';
 AST.Program = 'Program';
@@ -134,10 +136,10 @@ AST.prototype.arrayDeclaration = function () {
 
 AST.prototype.assignment = function () {
 
-  var left = this.equality();
+  var left = this.logicalAND();
   if (this.expect('=')) {
 
-    var right = this.equality();
+    var right = this.logicalAND();
     return {type: AST.AssignmentExpression, left: left, right: right};
   }
   return left;
@@ -215,6 +217,24 @@ AST.prototype.expect = function (e1, e2, e3, e4) {
 AST.prototype.identifier = function () {
 
   return {type: AST.Identifier, name: this.consume().text};
+};
+
+AST.prototype.logicalAND = function () {
+
+  var left = this.equality();
+  var token;
+  while ((token = this.expect('&&'))) {
+
+    left = {
+      type: AST.LogicalExpression,
+      left: left,
+      operator: token.text,
+      right: this.equality()
+
+    }
+  }
+
+  return left;
 };
 
 AST.prototype.multiplicative = function () {
@@ -521,6 +541,13 @@ ASTCompiler.prototype.recurse = function (ast, context, create) {
 
     case AST.Literal:
       return this.escape(ast.value);
+
+    case AST.LogicalExpression:
+      intoId = this.nextId();
+      this.state.body.push(this.assign(intoId, this.recurse(ast.left)));
+      this.if_(ast.operator === '&&' ? intoId : this.not(intoId),
+        this.assign(intoId, this.recurse(ast.right)));
+      return intoId;
 
     case AST.Identifier:
       ensureSafeMemberName(ast.name);

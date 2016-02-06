@@ -690,4 +690,10 @@ describe('parse', function () {
 
     expect(parse('2 + 3 < 6 - 2')()).toBe(false);
   });
+
+  it('parses logical AND', function () {
+
+    expect(parse('true && true')()).toBe(true);
+    expect(parse('true && false')()).toBe(false);
+  });
 });
