@@ -642,4 +642,10 @@ describe('parse', function () {
 
     expect(parse('43 - 1')()).toBe(42);
   });
+
+  it('parses multiplicatives as a higher precedence than additives', function () {
+
+    expect(parse('2 + 4 * 10')()).toBe(42);
+    expect(parse('20 * 4 - 38')()).toBe(42);
+  });
 });
