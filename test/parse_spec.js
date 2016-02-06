@@ -617,4 +617,9 @@ describe('parse', function () {
 
     expect(parse('21 * 2')()).toBe(42);
   });
+
+  it('parses a division', function () {
+
+    expect(parse('84 / 2')()).toBe(42);
+  });
 });
