@@ -627,4 +627,9 @@ describe('parse', function () {
 
     expect(parse('84 % 2')()).toBe(0)
   });
+
+  it('parses many multiplicatives', function () {
+
+    expect(parse('36 * 2 % 5')()).toBe(2);
+  });
 });
