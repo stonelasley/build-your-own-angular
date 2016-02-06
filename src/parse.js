@@ -138,7 +138,7 @@ AST.prototype.additive = function () {
 
   var left = this.multiplicative();
   var token;
-  while ((token = this.expect('+'))) {
+  while ((token = this.expect('+') || (token = this.expect('-')))) {
 
     left = {
       type: AST.BinaryExpression,

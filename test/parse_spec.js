@@ -637,4 +637,9 @@ describe('parse', function () {
 
     expect(parse('21 + 21')()).toBe(42);
   });
+
+  it('parses a subtraction', function () {
+
+    expect(parse('43 - 1')()).toBe(42);
+  });
 });
