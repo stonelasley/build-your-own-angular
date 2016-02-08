@@ -17,7 +17,6 @@
     "sinon": "^1.17.2"
   },
   "scripts": {
-    "lint": "jshint src test",
     "test": "karma start --single-run"
   },
   "dependencies": {
