@@ -814,4 +814,18 @@ describe('parse', function () {
     var fn = parse('"hello" | upcase | exclamate');
     expect(fn()).toEqual('HELLO!');
   });
+
+  it('can pass an argument to filters', function () {
+
+    register('repeat', function () {
+
+      return function (s, times) {
+
+        return _.repeat(s, times);
+      };
+    });
+
+    var fn = parse('"hello" | repeat:3');
+    expect(fn()).toEqual('hellohellohello');
+  });
 });
