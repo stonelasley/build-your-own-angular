@@ -221,7 +221,7 @@ AST.prototype.expect = function (e1, e2, e3, e4) {
 AST.prototype.filter = function () {
 
   var left = this.assignment();
-  if (this.expect('|')) {
+  while (this.expect('|')) {
 
     left = {
       type: AST.CallExpression,
