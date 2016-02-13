@@ -1,8 +1,12 @@
 'use strict';
 
+var _ = require('lodash');
+
 function filterFilter() {
 
-  return function () {
+  return function (array, filterExpr) {
+
+    return _.filter(array, filterExpr);
   };
 }
 
