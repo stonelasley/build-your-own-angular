@@ -28,4 +28,10 @@ describe('filter filter', function () {
 
     expect(fn(scope)).toEqual([1, 3]);
   });
+
+  it('can filter an array of string with a string', function () {
+
+    var fn = parse('arr | filter:"a"');
+    expect(fn({arr: ["a", "b", "a"]})).toEqual(['a', 'a']);
+  });
 });
