@@ -1,7 +1,8 @@
 'use strict';
 
-var register = require('../src/filter').register;
 var filter = require('../src/filter').filter;
+var parse = require('../src/parse');
+var register = require('../src/filter').register;
 
 describe('filter', function () {
 
