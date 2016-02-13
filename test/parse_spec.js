@@ -828,4 +828,18 @@ describe('parse', function () {
     var fn = parse('"hello" | repeat:3');
     expect(fn()).toEqual('hellohellohello');
   });
+
+  it('can pass multiple arguments to filters', function () {
+
+    register('surround', function () {
+
+      return function (s, left, right) {
+
+        return left + s + right;
+      };
+    });
+
+    var fn = parse('"hello" | surround:"*":"!"');
+    expect(fn()).toEqual('*hello!');
+  });
 });

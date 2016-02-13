@@ -231,7 +231,7 @@ AST.prototype.filter = function () {
       filter: true
     };
 
-    if (this.expect(':')) {
+    while (this.expect(':')) {
 
       args.push(this.assignment());
     }
