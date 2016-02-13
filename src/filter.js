@@ -26,4 +26,6 @@ function register(name, factory) {
   }
 }
 
+register('filter', require('./filter_filter'));
+
 module.exports = {register: register, filter: filter};
