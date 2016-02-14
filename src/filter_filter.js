@@ -6,7 +6,9 @@ function createPredicateFn(expression) {
 
   return function predicateFn(item) {
 
-    return item.indexOf(expression) !== -1;
+    var actual = item.toLowerCase();
+    var expected = expression.toLowerCase();
+    return actual.indexOf(expected) !== -1;
   };
 }
 

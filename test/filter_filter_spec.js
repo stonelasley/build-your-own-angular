@@ -40,4 +40,10 @@ describe('filter filter', function () {
     var fn = parse('arr | filter:"o"');
     expect(fn({arr: ['quick', 'brown', 'fox']})).toEqual(['brown', 'fox']);
   });
+
+  it('can filter an array of strings insensitive of case', function () {
+
+    var fn = parse('arr | filter:"o"');
+    expect(fn({arr: ['quick', 'BROWN', 'fox']})).toEqual(['BROWN', 'fox']);
+  });
 });
