@@ -6,8 +6,8 @@ function createPredicateFn(expression) {
 
   function comparator(actual, expected) {
 
-    actual = actual.toLowerCase();
-    expected = expected.toLowerCase();
+    actual = ('' + actual).toLowerCase();
+    expected = ('' + expected).toLowerCase();
     return actual.indexOf(expected) !== -1;
   }
 
@@ -39,7 +39,8 @@ function filterFilter() {
 
     if (_.isFunction(filterExpr)) {
       predicateFn = filterExpr;
-    } else if (_.isString(filterExpr)) {
+    } else if (_.isString(filterExpr) ||
+      _.isNumber(filterExpr)) {
       predicateFn = createPredicateFn(filterExpr);
     } else {
       return array;
