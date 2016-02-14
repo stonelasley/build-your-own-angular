@@ -127,4 +127,10 @@ describe('filter filter', function () {
     var fn = parse('arr | filter:null');
     expect(fn({arr: [null, 'not null']})).toEqual([null]);
   });
+
+  it('filter does not match null value with the string null', function () {
+
+    var fn = parse('arr | filter:"null"');
+    expect(fn({arr: [null, 'not null']})).toEqual(['not null']);
+  });
 });

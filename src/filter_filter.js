@@ -7,7 +7,7 @@ function createPredicateFn(expression) {
   function comparator(actual, expected) {
 
     if (_.isNull(actual) || _.isNull(expected)) {
-      
+
       return actual === expected;
     }
     actual = ('' + actual).toLowerCase();
