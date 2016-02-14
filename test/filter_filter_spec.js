@@ -46,4 +46,18 @@ describe('filter filter', function () {
     var fn = parse('arr | filter:"o"');
     expect(fn({arr: ['quick', 'BROWN', 'fox']})).toEqual(['BROWN', 'fox']);
   });
+
+  it('filters an array of objects where any value matches', function () {
+    var fn = parse('arr | filter:"o"');
+    expect(fn({
+      arr: [
+        {firstName: 'John', lastName: 'Brown'},
+        {firstName: 'Jane', lastName: 'Fox'},
+        {firstName: 'Mary', lastName: 'Quick'}
+      ]
+    })).toEqual([
+      {firstName: 'John', lastName: 'Brown'},
+      {firstName: 'Jane', lastName: 'Fox'}
+    ]);
+  });
 });
