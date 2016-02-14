@@ -40,7 +40,8 @@ function filterFilter() {
     if (_.isFunction(filterExpr)) {
       predicateFn = filterExpr;
     } else if (_.isString(filterExpr) ||
-      _.isNumber(filterExpr)) {
+      _.isNumber(filterExpr) ||
+      _.isBoolean(filterExpr)) {
       predicateFn = createPredicateFn(filterExpr);
     } else {
       return array;
