@@ -104,13 +104,21 @@ describe('filter filter', function () {
   it('filters with a boolean', function () {
 
     var fn = parse('arr | filter:true');
-    expect(fn({arr: [
-      {name: 'Mary', admin: true},
-      {name: 'John', admin: true},
-      {name: 'Jane', admin: false}
-    ]})).toEqual([
+    expect(fn({
+      arr: [
+        {name: 'Mary', admin: true},
+        {name: 'John', admin: true},
+        {name: 'Jane', admin: false}
+      ]
+    })).toEqual([
       {name: 'Mary', admin: true},
       {name: 'John', admin: true}
     ]);
+  });
+
+  it('filters with a substring numeric value', function () {
+
+    var fn = parse('arr | filter:42');
+    expect(fn({arr: ['contains 42']})).toEqual(['contains 42']);
   });
 });
