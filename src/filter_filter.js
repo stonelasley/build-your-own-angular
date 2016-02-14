@@ -20,7 +20,7 @@ function createPredicateFn(expression) {
 
       return _.some(actual, function (value) {
 
-        return comparator(value, expected);
+        return deepCompare(value, expected, comparator);
       });
     } else {
 
