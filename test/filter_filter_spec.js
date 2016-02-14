@@ -121,4 +121,10 @@ describe('filter filter', function () {
     var fn = parse('arr | filter:42');
     expect(fn({arr: ['contains 42']})).toEqual(['contains 42']);
   });
+
+  it('filters matching null', function () {
+
+    var fn = parse('arr | filter:null');
+    expect(fn({arr: [null, 'not null']})).toEqual([null]);
+  });
 });
