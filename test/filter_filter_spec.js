@@ -75,4 +75,17 @@ describe('filter filter', function () {
       {name: {first: 'Jane', last: 'Fox'}}
     ]);
   });
+
+  it('filters an array of arrays where a nested value matches', function () {
+
+    var fn = parse('arr | filter: "o"');
+    expect(fn({
+      arr: [
+        [{name: 'John'}, {name: 'Mary'}],
+        [{name: 'Jane'}],
+      ]
+    })).toEqual([
+      [{name: 'John'}, {name: 'Mary'}],
+    ]);
+  });
 });

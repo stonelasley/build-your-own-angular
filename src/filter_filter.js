@@ -13,9 +13,6 @@ function createPredicateFn(expression) {
 
   function deepCompare(actual, expected, comparator) {
 
-    console.info('actual', actual);
-    console.info('expected', expected);
-    console.info('comparator', comparator);
     if (_.isObject(actual)) {
 
       return _.some(actual, function (value) {
