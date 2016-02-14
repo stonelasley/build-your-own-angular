@@ -6,7 +6,7 @@ function createPredicateFn(expression) {
 
   return function predicateFn(item) {
 
-    return item === expression;
+    return item.indexOf(expression) !== -1;
   };
 }
 

@@ -34,4 +34,10 @@ describe('filter filter', function () {
     var fn = parse('arr | filter:"a"');
     expect(fn({arr: ["a", "b", "a"]})).toEqual(['a', 'a']);
   });
+
+  it('can filter an array of strings with substring matching', function () {
+
+    var fn = parse('arr | filter:"o"');
+    expect(fn({arr: ['quick', 'brown', 'fox']})).toEqual(['brown', 'fox']);
+  });
 });
