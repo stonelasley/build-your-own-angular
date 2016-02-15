@@ -212,4 +212,19 @@ describe('filter filter', function () {
       {name: {first: 'Jane'}, role: 'moderator'}
     ]);
   });
+
+  it('ignores undefined values in expected object', function () {
+
+    var fn = parse('arr | filter: {name: thisIsUndefined}')
+    expect(fn({
+      arr: [
+        {name: {first: 'Joe'}, role: 'admin'},
+        {name: {first: 'Jane'}, role: 'moderator'}
+      ]
+    })).toEqual([
+      {name: {first: 'Joe'}, role: 'admin'},
+      {name: {first: 'Jane'}, role: 'moderator'}
+    ]);
+
+  });
 });
