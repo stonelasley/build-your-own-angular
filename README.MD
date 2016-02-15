@@ -14,3 +14,4 @@ http://teropa.info/build-your-own-angular
 6. Lookup and Function Call Expressions
 7. Operator Expressions
 8. Filters
+9. Expressions and Watches
