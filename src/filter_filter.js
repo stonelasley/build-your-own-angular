@@ -42,7 +42,9 @@ function createPredicateFn(expression) {
 
             return true;
           }
-          return deepCompare(actual[expectedKey], expectedVal, comparator);
+          var isWildCard = (expectedKey === '$');
+          var actualVal = isWildCard ? actual : actual[expectedKey];
+          return deepCompare(actualVal, expectedVal, comparator, isWildCard);
         });
       } else if (matchAnyProperty) {
 
