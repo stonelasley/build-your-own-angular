@@ -227,4 +227,23 @@ describe('filter filter', function () {
     ]);
 
   });
+
+  it('filters with a nested object in array', function () {
+
+    var fn = parse('arr | filter:{users: {name: {first: "o"}}}');
+    expect(fn({
+      arr: [
+        {
+          users: [{name: {first: 'Joe'}, role: 'admin'},
+            {name: {first: 'Jane'}, role: 'moderator'}]
+        },
+        {users: [{name: {first: 'Mary'}, role: 'admin'}]}
+      ]
+    })).toEqual([
+      {
+        users: [{name: {first: 'Joe'}, role: 'admin'},
+          {name: {first: 'Jane'}, role: 'moderator'}]
+      }
+    ]);
+  });
 });

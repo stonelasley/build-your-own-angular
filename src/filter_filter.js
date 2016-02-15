@@ -25,6 +25,13 @@ function createPredicateFn(expression) {
 
       return !deepCompare(actual, expected.substring(1), comparator);
     }
+    if (_.isArray(actual)) {
+
+      return _.any(actual, function (actualItem) {
+
+        return deepCompare(actualItem, expected, comparator)
+      });
+    }
     if (_.isObject(actual)) {
 
       if (_.isObject(expected)) {
