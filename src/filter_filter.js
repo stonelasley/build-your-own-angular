@@ -4,6 +4,8 @@ var _ = require('lodash');
 
 function createPredicateFn(expression) {
 
+  var shouldMatchPrimitives = _.isObject(expression) && ('$' in expression);
+
   function comparator(actual, expected) {
 
     if (_.isUndefined(actual)) {
@@ -64,6 +66,10 @@ function createPredicateFn(expression) {
 
   return function predicateFn(item) {
 
+    if (shouldMatchPrimitives && !_.isObject(item)) {
+
+      return deepCompare(item, expression.$, comparator);
+    }
     return deepCompare(item, expression, comparator, true);
   };
 }
