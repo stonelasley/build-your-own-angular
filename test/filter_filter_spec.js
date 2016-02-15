@@ -68,7 +68,7 @@ describe('filter filter', function () {
       arr: [
         {name: {first: 'John', last: 'Brown'}},
         {name: {first: 'Jane', last: 'Fox'}},
-        {name: {first: 'Mary', last: 'Quick'}},
+        {name: {first: 'Mary', last: 'Quick'}}
       ]
     })).toEqual([
       {name: {first: 'John', last: 'Brown'}},
@@ -82,10 +82,10 @@ describe('filter filter', function () {
     expect(fn({
       arr: [
         [{name: 'John'}, {name: 'Mary'}],
-        [{name: 'Jane'}],
+        [{name: 'Jane'}]
       ]
     })).toEqual([
-      [{name: 'John'}, {name: 'Mary'}],
+      [{name: 'John'}, {name: 'Mary'}]
     ]);
   });
 
@@ -96,7 +96,7 @@ describe('filter filter', function () {
       arr: [
         {name: 'Mary', age: 42},
         {name: 'John', age: 43},
-        {name: 'Jane', age: 44},
+        {name: 'Jane', age: 44}
       ]
     })).toEqual([{name: 'Mary', age: 42}]);
   });
@@ -215,7 +215,7 @@ describe('filter filter', function () {
 
   it('ignores undefined values in expected object', function () {
 
-    var fn = parse('arr | filter: {name: thisIsUndefined}')
+    var fn = parse('arr | filter: {name: thisIsUndefined}');
     expect(fn({
       arr: [
         {name: {first: 'Joe'}, role: 'admin'},
@@ -252,7 +252,7 @@ describe('filter filter', function () {
     var items = [
       {user: 'Bob'},
       {user: {name: 'Bob'}},
-      {user: {name: {first: 'Bob', last: 'Fox'}}},
+      {user: {name: {first: 'Bob', last: 'Fox'}}}
     ];
 
     var fn = parse('arr | filter: {user: {name: "Bob"}}');
@@ -341,7 +341,7 @@ describe('filter filter', function () {
 
   it('allows using an equality comparator', function () {
 
-    var fn = parse('arr | filter: {name: "Jo"}:true')
+    var fn = parse('arr | filter: {name: "Jo"}:true');
     expect(fn({
       arr: [
         {name: "Jo"},
