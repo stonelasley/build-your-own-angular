@@ -27,10 +27,19 @@ function createPredicateFn(expression) {
     }
     if (_.isObject(actual)) {
 
-      return _.some(actual, function (value) {
+      if(_.isObject(expected)) {
 
-        return deepCompare(value, expected, comparator);
-      });
+        return _.every(_.toPlainObject(expected), function (expectedVal, expectedKey) {
+
+          return deepCompare(actual[expectedKey], expectedVal, comparator);
+        });
+      } else {
+
+        return _.some(actual, function (value) {
+
+          return deepCompare(value, expected, comparator);
+        });
+      }
     } else {
 
       return comparator(actual, expected);
@@ -54,7 +63,8 @@ function filterFilter() {
     } else if (_.isString(filterExpr) ||
       _.isNumber(filterExpr) ||
       _.isBoolean(filterExpr) ||
-      _.isNull(filterExpr)) {
+      _.isNull(filterExpr) ||
+      _.isObject(filterExpr)) {
       predicateFn = createPredicateFn(filterExpr);
     } else {
       return array;
