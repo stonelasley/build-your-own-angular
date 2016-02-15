@@ -160,7 +160,7 @@ AST.prototype.additive = function () {
       left: left,
       operator: token.text,
       right: this.multiplicative()
-    }
+    };
   }
   return left;
 };
@@ -256,7 +256,7 @@ AST.prototype.logicalAND = function () {
       operator: token.text,
       right: this.equality()
 
-    }
+    };
   }
 
   return left;
@@ -273,7 +273,7 @@ AST.prototype.logicalOR = function () {
       left: left,
       operator: token.text,
       right: this.logicalAND()
-    }
+    };
   }
   return left;
 };
@@ -423,7 +423,7 @@ AST.prototype.relational = function () {
       left: left,
       operator: token.text,
       right: this.additive()
-    }
+    };
   }
 
   return left;
@@ -443,7 +443,7 @@ AST.prototype.ternary = function () {
         test: test,
         consequent: consequent,
         alternate: alternate
-      }
+      };
     }
   }
 
@@ -610,8 +610,8 @@ ASTCompiler.prototype.recurse = function (ast, context, create) {
       }
       return this.assign(leftExpr,
         'ensureSafeObject(' +
-        this.recurse(ast.right)
-        + ')');
+        this.recurse(ast.right) +
+        ')');
 
     case AST.ArrayExpression:
       var elements = _.map(ast.elements, function (element) {

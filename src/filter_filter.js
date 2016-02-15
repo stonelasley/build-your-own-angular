@@ -37,7 +37,7 @@ function createPredicateFn(expression, comparator) {
 
       return _.any(actual, function (actualItem) {
 
-        return deepCompare(actualItem, expected, comparator, matchAnyProperty)
+        return deepCompare(actualItem, expected, comparator, matchAnyProperty);
       });
     }
     if (_.isObject(actual)) {

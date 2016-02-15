@@ -43,7 +43,7 @@ describe('filter', function () {
     });
 
     expect(filter('my')).toBe(myFilter);
-    expect(filter('myOther')).toBe(myOtherFilter)
+    expect(filter('myOther')).toBe(myOtherFilter);
   });
 
 });
