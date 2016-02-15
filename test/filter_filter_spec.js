@@ -312,4 +312,18 @@ describe('filter filter', function () {
     var fn = parse('arr | filter: {$: "o"}');
     expect(fn({arr: ['Joe', 'Jane', 'Mary']})).toEqual(['Joe']);
   });
+
+  it('filters with nested wildcard property', function () {
+
+    var fn = parse('arr | filter:{$: {$:"o"}}');
+    expect(fn({
+      arr: [
+        {name: {first: 'Joe'}, role: 'admin'},
+        {name: {first: 'Jane'}, role: 'moderator'},
+        {name: {first: 'Mary'}, role: 'admin'}
+      ]
+    })).toEqual([
+      {name: {first: 'Joe'}, role: 'admin'}
+    ]);
+  });
 });

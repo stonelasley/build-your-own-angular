@@ -21,7 +21,7 @@ function createPredicateFn(expression) {
     return actual.indexOf(expected) !== -1;
   }
 
-  function deepCompare(actual, expected, comparator, matchAnyProperty) {
+  function deepCompare(actual, expected, comparator, matchAnyProperty, inWildcard) {
 
     if (_.isString(expected) && _.startsWith(expected, '!')) {
 
@@ -36,7 +36,7 @@ function createPredicateFn(expression) {
     }
     if (_.isObject(actual)) {
 
-      if (_.isObject(expected)) {
+      if (_.isObject(expected) && !inWildcard) {
 
         return _.every(_.toPlainObject(expected), function (expectedVal, expectedKey) {
 
@@ -46,7 +46,7 @@ function createPredicateFn(expression) {
           }
           var isWildCard = (expectedKey === '$');
           var actualVal = isWildCard ? actual : actual[expectedKey];
-          return deepCompare(actualVal, expectedVal, comparator, isWildCard);
+          return deepCompare(actualVal, expectedVal, comparator, isWildCard, isWildCard);
         });
       } else if (matchAnyProperty) {
 
