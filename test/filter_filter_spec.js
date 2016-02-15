@@ -338,4 +338,15 @@ describe('filter filter', function () {
       }
     })).toEqual(['o']);
   });
+
+  it('allows using an equality comparator', function () {
+
+    var fn = parse('arr | filter: {name: "Jo"}:true')
+    expect(fn({
+      arr: [
+        {name: "Jo"},
+        {name: "Joe"}
+      ]
+    })).toEqual([{name: "Jo"}]);
+  });
 });
