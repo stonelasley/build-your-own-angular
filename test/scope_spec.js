@@ -836,6 +836,20 @@ describe('Scope', function () {
       scope.$digest();
       expect(scope.counter).toBe(0);
     });
+
+    it('accepts expressions for watch functions', function () {
+
+      var theValue;
+      scope.aValue = 42;
+      scope.$watch('aValue',
+        function (newValue, oldValue, scope) {
+
+          theValue = newValue;
+        });
+      scope.$digest();
+
+      expect(theValue).toBe(42);
+    });
   });
 
   describe('watchGroup', function () {
@@ -2288,12 +2302,12 @@ describe('Scope', function () {
         event.stopPropagation();
       };
       var listener2 = jasmine.createSpy();
-      
+
       scope.$on('someEvent', listener1);
       scope.$on('someEvent', listener2);
-      
+
       scope.$emit('someEvent');
-      
+
       expect(listener2).toHaveBeenCalled();
     });
 

@@ -1,6 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
+var parse = require('./parse');
 
 function initWatchVal() {
 }
@@ -216,7 +217,7 @@ Scope.prototype.$watch = function (watchFn, listenerFn, valueEq) {
   var self = this;
 
   var watcher = {
-    watchFn: watchFn,
+    watchFn: parse(watchFn),
     listenerFn: listenerFn || function () {
     },
     valueEq: !!valueEq,
