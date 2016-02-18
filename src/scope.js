@@ -156,7 +156,7 @@ Scope.prototype.$emit = function (eventName) {
 };
 
 Scope.prototype.$eval = function (expr, locals) {
-  return expr(this, locals);
+  return parse(expr)(this, locals);
 };
 
 Scope.prototype.$evalAsync = function (expr) {
