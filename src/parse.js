@@ -92,6 +92,9 @@ function markConstantExpressions(ast) {
   var allConstants;
   switch (ast.type) {
 
+    case AST.Identifier:
+      ast.constant = false;
+      break;
     case AST.Literal:
       ast.constant = true;
       break;
