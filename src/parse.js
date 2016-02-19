@@ -106,6 +106,14 @@ function markConstantExpressions(ast) {
     case AST.Literal:
       ast.constant = true;
       break;
+    case AST.ObjectExpression:
+      allConstants = true;
+      _.forEach(ast.properties, function (property) {
+        markConstantExpressions(property.value);
+        allConstants = allConstants && property.value.constant;
+      });
+      ast.constant = allConstants;
+      break;
     case AST.Program:
       allConstants = true;
       _.forEach(ast.body, function (expr) {
