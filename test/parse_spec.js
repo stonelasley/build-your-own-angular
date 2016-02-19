@@ -872,4 +872,10 @@ describe('parse', function () {
     var fn = parse('true');
     expect(fn.literal).toBe(true);
   });
+
+  it('marks arrays literal', function () {
+
+    var fn = parse('[1, 2, aVariable]');
+    expect(fn.literal).toBe(true);
+  });
 });
