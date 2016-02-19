@@ -123,6 +123,9 @@ function markConstantExpressions(ast) {
       });
       ast.constant = allConstants;
       break;
+    case AST.ThisExpression:
+      ast.constant = false;
+      break;
   }
 }
 
