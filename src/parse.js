@@ -78,6 +78,13 @@ function ifDefined(value, defaultValue) {
   return typeof value === 'undefined' ? defaultValue : value;
 }
 
+function isLiteral(ast) {
+
+  return ast.body.length === 0 ||
+    ast.body.length === 1 && (
+    ast.body[0].type === AST.Literal);
+}
+
 function parse(expr) {
 
   switch (typeof  expr) {
@@ -514,7 +521,7 @@ ASTCompiler.prototype.compile = function (text) {
     '}; return fn;';
 
   /* jshint -W054 */
-  return new Function(
+  var fn = new Function(
     'ensureSafeFunction',
     'ensureSafeMemberName',
     'ensureSafeObject',
@@ -527,6 +534,8 @@ ASTCompiler.prototype.compile = function (text) {
     ifDefined,
     filter);
   /* jshint +W054 */
+  fn.literal = isLiteral(ast);
+  return fn;
 };
 
 ASTCompiler.prototype.computedMember = function (left, right) {

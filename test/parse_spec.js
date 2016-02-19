@@ -854,4 +854,22 @@ describe('parse', function () {
 
     expect(parse()).toEqual(jasmine.any(Function));
   });
+
+  it('marks integers literal', function () {
+
+    var fn = parse('42');
+    expect(fn.literal).toBe(true);
+  });
+
+  it('marks strings literal', function () {
+
+    var fn = parse('"abc"');
+    expect(fn.literal).toBe(true);
+  });
+
+  it('marks booleans literal', function () {
+
+    var fn = parse('true');
+    expect(fn.literal).toBe(true);
+  });
 });
