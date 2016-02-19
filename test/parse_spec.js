@@ -890,4 +890,10 @@ describe('parse', function () {
     var fn = parse('!false');
     expect(fn.literal).toBe(false);
   });
+
+  it('marks binary expressions non-literal', function () {
+
+    var fn = parse('1 + 2');
+    expect(fn.literal).toBe(false);
+  });
 });
