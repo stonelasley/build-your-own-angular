@@ -878,4 +878,10 @@ describe('parse', function () {
     var fn = parse('[1, 2, aVariable]');
     expect(fn.literal).toBe(true);
   });
+
+  it('marks objects literal', function () {
+
+    var fn = parse('{a: 1, b: aVariable}');
+    expect(fn.literal).toBe(true);
+  });
 });
