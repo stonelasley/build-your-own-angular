@@ -884,4 +884,10 @@ describe('parse', function () {
     var fn = parse('{a: 1, b: aVariable}');
     expect(fn.literal).toBe(true);
   });
+
+  it('marks unary expressions non-literal', function () {
+
+    var fn = parse('!false');
+    expect(fn.literal).toBe(false);
+  });
 });
