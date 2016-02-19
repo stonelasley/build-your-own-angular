@@ -92,6 +92,14 @@ function markConstantExpressions(ast) {
   var allConstants;
   switch (ast.type) {
 
+    case AST.ArrayExpression:
+      allConstants = true;
+      _.forEach(ast.elements, function (element) {
+        markConstantExpressions(element);
+        allConstants = allConstants && element.constant;
+      });
+      ast.constant = allConstants;
+      break;
     case AST.Identifier:
       ast.constant = false;
       break;

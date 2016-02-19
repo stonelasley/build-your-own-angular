@@ -920,4 +920,12 @@ describe('parse', function () {
     var fn = parse('a');
     expect(fn.constant).toBe(false);
   });
+
+  it('marks arrays constant when elements are all constant', function () {
+
+    expect(parse('[1, 2, 3]').constant).toBe(true);
+    expect(parse('[1, [2, [3]]]').constant).toBe(true);
+    expect(parse('[1, 2, a]').constant).toBe(false);
+    expect(parse('[1, [2, [a]]]').constant).toBe(false);
+  });
 });
