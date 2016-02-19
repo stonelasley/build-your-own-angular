@@ -87,6 +87,26 @@ function isLiteral(ast) {
     ast.body[0].type === AST.ObjectExpression);
 }
 
+function markConstantExpressions(ast) {
+
+  var allConstants;
+  switch (ast.type) {
+
+    case AST.Literal:
+      ast.constant = true;
+      break;
+    case AST.Program:
+      allConstants = true;
+      _.forEach(ast.body, function (expr) {
+
+        markConstantExpressions(expr);
+        allConstants = allConstants && expr.constant;
+      });
+      ast.constant = allConstants;
+      break;
+  }
+}
+
 function parse(expr) {
 
   switch (typeof  expr) {
@@ -506,6 +526,7 @@ ASTCompiler.prototype.assign = function (id, value) {
 ASTCompiler.prototype.compile = function (text) {
 
   var ast = this.astBuilder.ast(text);
+  markConstantExpressions(ast);
   this.state = {
     body: [],
     nextId: 0,
@@ -537,6 +558,7 @@ ASTCompiler.prototype.compile = function (text) {
     filter);
   /* jshint +W054 */
   fn.literal = isLiteral(ast);
+  fn.constant = ast.constant;
   return fn;
 };
 

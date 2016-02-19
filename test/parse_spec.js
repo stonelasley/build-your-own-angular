@@ -896,4 +896,22 @@ describe('parse', function () {
     var fn = parse('1 + 2');
     expect(fn.literal).toBe(false);
   });
+
+  it('marks integers constant', function () {
+
+    var fn = parse('42');
+    expect(fn.constant).toBe(true);
+  });
+
+  it('marks strings constant', function () {
+
+    var fn = parse('"abc"');
+    expect(fn.constant).toBe(true);
+  });
+
+  it('marks booleans constant', function () {
+
+    var fn = parse('true');
+    expect(fn.constant).toBe(true);
+  });
 });
