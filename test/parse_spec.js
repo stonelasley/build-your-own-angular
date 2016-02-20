@@ -941,4 +941,10 @@ describe('parse', function () {
 
     expect(parse('this').constant).toBe(false);
   });
+
+  it('marks non-computed lookup constant when object is constant', function () {
+
+    expect(parse('{a: 1}.a').constant).toBe(true);
+    expect(parse('obj.a').constant).toBe(false);
+  });
 });
