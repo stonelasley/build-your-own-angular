@@ -101,7 +101,13 @@ function markConstantExpressions(ast) {
       ast.constant = allConstants;
       break;
     case AST.CallExpression:
-      ast.constant = false;
+      allConstants = ast.filter ? true : false;
+      _.forEach(ast.arguments, function (arg) {
+
+        markConstantExpressions(arg);
+        allConstants = allConstants && arg.constant;
+      });
+      ast.constant = allConstants;
       break;
     case AST.Identifier:
       ast.constant = false;
