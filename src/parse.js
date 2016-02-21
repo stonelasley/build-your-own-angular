@@ -106,6 +106,7 @@ function markConstantExpressions(ast) {
       ast.constant = ast.left.constant && ast.right.constant;
       break;
     case AST.BinaryExpression:
+    case AST.LogicalExpression:
       markConstantExpressions(ast.left);
       markConstantExpressions(ast.right);
       ast.constant = ast.left.constant && ast.right.constant;

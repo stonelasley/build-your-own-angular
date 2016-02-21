@@ -996,4 +996,13 @@ describe('parse', function () {
     expect(parse('a + a').constant).toBe(false);
   });
 
+  it('marks literals constant when both arguments are constant', function () {
+
+    expect(parse('true && false').constant).toBe(true);
+    expect(parse('true && false').literal).toBe(false);
+    expect(parse('true && a').constant).toBe(false);
+    expect(parse('a && false').constant).toBe(false);
+    expect(parse('a && b').constant).toBe(false);
+  });
+
 });
