@@ -147,6 +147,10 @@ function markConstantExpressions(ast) {
     case AST.ThisExpression:
       ast.constant = false;
       break;
+    case AST.UnaryExpression:
+      markConstantExpressions(ast.argument);
+      ast.constant = ast.argument.constant;
+      break;
   }
 }
 
