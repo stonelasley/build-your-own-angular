@@ -958,6 +958,6 @@ describe('parse', function () {
 
   it('marks function calls non-constant', function () {
 
-    expect(parse('aFunction()')).toBe(false);
+    expect(parse('aFunction()').constant).toBe(false);
   });
 });
