@@ -987,4 +987,13 @@ describe('parse', function () {
     expect(parse('+a').constant).toBe(false);
   });
 
+  it('marks binaries constant when both arguments are constant', function () {
+
+    expect(parse('1 + 2').constant).toBe(true);
+    expect(parse('1 + 2').literal).toBe(false);
+    expect(parse('1 + a').constant).toBe(false);
+    expect(parse('a + 1').constant).toBe(false);
+    expect(parse('a + a').constant).toBe(false);
+  });
+
 });
