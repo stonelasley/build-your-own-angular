@@ -100,6 +100,9 @@ function markConstantExpressions(ast) {
       });
       ast.constant = allConstants;
       break;
+    case AST.CallExpression:
+      ast.constant = false;
+      break;
     case AST.Identifier:
       ast.constant = false;
       break;

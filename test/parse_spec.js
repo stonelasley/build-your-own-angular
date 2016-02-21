@@ -955,4 +955,9 @@ describe('parse', function () {
     expect(parse('{a: 1}[something]').constant).toBe(false);
     expect(parse('obj[something]').constant).toBe(false);
   });
+
+  it('marks function calls non-constant', function () {
+
+    expect(parse('aFunction()')).toBe(false);
+  });
 });
