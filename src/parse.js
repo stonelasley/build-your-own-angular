@@ -120,6 +120,12 @@ function markConstantExpressions(ast) {
       });
       ast.constant = allConstants;
       break;
+    case AST.ConditionalExpression:
+      markConstantExpressions(ast.test);
+      markConstantExpressions(ast.consequent);
+      markConstantExpressions(ast.alternate);
+      ast.constant = ast.test.constant && ast.consequent.constant && ast.alternate.constant;
+      break;
     case AST.Identifier:
       ast.constant = false;
       break;
