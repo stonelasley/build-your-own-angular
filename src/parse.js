@@ -185,6 +185,26 @@ function markConstantExpressions(ast) {
   }
 }
 
+function oneTimeWatchDelegate(scope, listenerFn, valueEq, watchFn) {
+
+  var unwatch = scope.$watch(
+    function () {
+
+      return watchFn(scope);
+    },
+    function (newValue, oldValue, scope) {
+
+      if (_.isFunction(listenerFn)) {
+
+        listenerFn.apply(this, arguments);
+      }
+      unwatch();
+    },
+    valueEq
+  );
+  return unwatch;
+}
+
 function parse(expr) {
 
   switch (typeof  expr) {
@@ -192,9 +212,19 @@ function parse(expr) {
     case 'string':
       var lexer = new Lexer();
       var parser = new Parser(lexer);
+      var oneTime = false;
+      if (expr.charAt(0) === ':' && expr.charAt(1) === ':') {
+
+        oneTime = true;
+        expr = expr.substr(2);
+      }
       var parseFn = parser.parse(expr);
       if (parseFn.constant) {
+
         parseFn.$$watchDelegate = constantWatchDelegate;
+      } else if (oneTime) {
+
+        parseFn.$$watchDelegate = oneTimeWatchDelegate;
       }
       return parseFn;
     case 'function':
