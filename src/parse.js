@@ -198,7 +198,10 @@ function oneTimeWatchDelegate(scope, listenerFn, valueEq, watchFn) {
 
         listenerFn.apply(this, arguments);
       }
-      unwatch();
+      if (!_.isUndefined(newValue)) {
+
+        unwatch();
+      }
     },
     valueEq
   );

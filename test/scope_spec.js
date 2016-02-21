@@ -928,6 +928,18 @@ describe('Scope', function () {
 
       expect(scope.$$watchers.length).toBe(0);
     });
+
+    it('does not remove one-time watches until value has been defined', function () {
+
+      scope.$watch('::aValue', function () {
+      });
+      scope.$digest();
+      expect(scope.$$watchers.length).toBe(1);
+
+      scope.aValue = 42;
+      scope.$digest();
+      expect(scope.$$watchers.length).toBe(0);
+    });
   });
 
   describe('watchGroup', function () {
