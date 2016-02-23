@@ -890,7 +890,7 @@ describe('Scope', function () {
 
         expect(called).toBe(true);
         done();
-      })
+      });
     });
 
     it('removes constant watches after first invocation', function () {

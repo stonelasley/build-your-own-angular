@@ -129,7 +129,7 @@ function markConstantExpressions(ast) {
       markConstantExpressions(ast.left);
       markConstantExpressions(ast.right);
       ast.constant = ast.left.constant && ast.right.constant;
-      break
+      break;
     case AST.CallExpression:
       allConstants = ast.filter ? true : false;
       _.forEach(ast.arguments, function (arg) {
