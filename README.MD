@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/stonelasley/build-your-own-angular.svg)](https://travis-ci.org/stonelasley/build-your-own-angular)  [![Coverage Status](https://coveralls.io/repos/stonelasley/build-your-own-angular/badge.svg?branch=master&service=github)](https://coveralls.io/github/stonelasley/build-your-own-angular?branch=master)
+[![Build Status](https://travis-ci.org/stonelasley/build-your-own-angular.svg)](https://travis-ci.org/stonelasley/build-your-own-angular)  [![Coverage Status](https://coveralls.io/repos/stonelasley/build-your-own-angular/badge.svg?branch=master&service=github)](https://coveralls.io/github/stonelasley/build-your-own-angular?branch=master) [![bitHound Overall Score](https://www.bithound.io/github/stonelasley/build-your-own-angular/badges/score.svg)](https://www.bithound.io/github/stonelasley/build-your-own-angular)
 ## Build your own Angular
 
 http://teropa.info/build-your-own-angular
