@@ -11,9 +11,6 @@ module.exports = function(config) {
       'src/**/*.js': ['jshint', 'browserify', 'coverage']
     },
     browsers: ['PhantomJS'],
-    browserify: {
-      debug: true
-    },
     reporters: ['progress', 'coverage', 'coveralls'],
     browserify: {
       debug: true,
