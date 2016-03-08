@@ -974,6 +974,18 @@ describe('Scope', function () {
       scope.$digest();
       expect(scope.$$watchers.length).toBe(0);
     });
+
+    it('does not remove one-time watches before all object vals defined', function () {
+
+      scope.$watch('::{a: 1, b: aValue}', function () {}, true);
+      scope.$digest();
+
+      expect(scope.$$watchers.length).toBe(1);
+      scope.aValue = 3;
+      scope.$digest();
+
+      expect(scope.$$watchers.length).toBe(0);
+    });
   });
 
   describe('watchGroup', function () {
